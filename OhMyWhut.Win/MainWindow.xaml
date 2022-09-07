@@ -1,0 +1,32 @@
+﻿<Window x:Class="OhMyWhut.Win.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:OhMyWhut.Win"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d">
+    <Grid x:Name="root">
+        <NavigationView x:Name="navView"
+                        IsSettingsVisible="False"
+                        IsBackButtonVisible="Collapsed"
+                        SelectionChanged="OnNavViewItemSelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem  x:Name="HomeNavItem"
+                                     Icon="Home"
+                                     Content="主页"
+                                     Tag="HomePage" />
+                <NavigationViewItem Icon="Tag"
+                                    Content="课表"
+                                    Tag="CoursePage" />
+                <NavigationViewItem Icon="Library"
+                                    Content="图书"
+                                    Tag="BookPage" />
+                <NavigationViewItem Icon="Shop"
+                                    Content="电费"
+                                    Tag="ElectricPage">
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+            <Frame x:Name="contentFrame" />
+        </NavigationView>
+    </Grid>
+</Window>

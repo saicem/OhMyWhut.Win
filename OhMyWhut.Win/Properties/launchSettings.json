@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "OhMyWhut.Win (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "OhMyWhut.Win (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
