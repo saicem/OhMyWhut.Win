@@ -35,10 +35,6 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<AdditionalFiles Include="stylecop.json" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.8" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.4" />
@@ -48,10 +44,6 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Validation" Version="17.0.64" />
-		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.8" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>

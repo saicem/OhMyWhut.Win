@@ -7,7 +7,6 @@
         mc:Ignorable="d">
     <Grid x:Name="root">
         <NavigationView x:Name="navView"
-                        IsSettingsVisible="False"
                         IsBackButtonVisible="Collapsed"
                         SelectionChanged="OnNavViewItemSelectionChanged">
             <NavigationView.MenuItems>

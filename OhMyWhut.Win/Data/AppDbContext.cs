@@ -25,45 +25,8 @@ namespace OhMyWhut.Win.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            options.UseSqlite($"Data Source={System.IO.Path.Join(path, "ohmywhut.db")}");
+            options.UseSqlite($"Data Source={System.IO.Path.Join(App.DataFolder, "app.db")}");
         }
-
-
-        public record Preference(string Key, string Value);
-
-        public record MyCourse(int Id,
-                               string Name,
-                               string Teacher,
-                               string Position,
-                               DayOfWeek DayOfWeek,
-                               int StartWeek,
-                               int EndWeek,
-                               int StartSec,
-                               int EndSec);
-
-        public record DetailCourse(int Id,
-                                   string SelectCode,
-                                   string Code,
-                                   string College,
-                                   string Name,
-                                   string Teachers,
-                                   string Position,
-                                   DayOfWeek DayOfWeek,
-                                   int StartWeek,
-                                   int EndWeek,
-                                   int StartSec,
-                                   int EndSec);
-
-        public record ElectricFee(int Id,
-                                  DateTimeOffset CreatedAt,
-                                  float RemainPower,
-                                  string RemainName,
-                                  float TotalValue,
-                                  string Unit,
-                                  float MeterOverdue);
-
-        public record Book(int Id, string Name, DateOnly BorrowDate, DateOnly ExpireDate);
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

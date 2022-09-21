@@ -1,8 +1,10 @@
-﻿using Microsoft.UI.Xaml;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using OhMyWhut.Win.Pages;
-using System;
+using OhMyWhut.Win.Services;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -15,41 +17,60 @@ namespace OhMyWhut.Win
     public sealed partial class MainWindow : Window
     {
         private readonly FrameNavigationOptions navOptions;
+        private readonly AppStatus _appStatus;
 
         public MainWindow()
         {
-            this.InitializeComponent();
-            this.navOptions = new FrameNavigationOptions();
-            this.navOptions.IsNavigationStackEnabled = false;
-            this.navView.SelectedItem = this.HomeNavItem;
+            _appStatus = App.Current.Services.GetService<AppStatus>();
+            InitializeComponent();
+
+            Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread().TryEnqueue(
+            Microsoft.UI.Dispatching.DispatcherQueuePriority.Low,
+            new Microsoft.UI.Dispatching.DispatcherQueueHandler(() =>
+            {
+                if (!_appStatus.IsLogin)
+                {
+                    ShowLoginDialog();
+                }
+            }));
+
+            navOptions = new FrameNavigationOptions();
+            navOptions.IsNavigationStackEnabled = false;
+            navView.SelectedItem = HomeNavItem;
         }
 
-        private void CheckLoginStatus()
+        private async void ShowLoginDialog()
         {
             ContentDialog dialog = new ContentDialog();
-            dialog.XamlRoot = this.root.XamlRoot;
+            dialog.XamlRoot = root.XamlRoot;
             dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
             dialog.PrimaryButtonText = "登录";
             dialog.CloseButtonText = "取消";
+            dialog.DefaultButton = ContentDialogButton.Primary;
             dialog.Content = new LoginPage();
-            var result = dialog.ShowAsync();
+            dialog.PrimaryButtonClick += (s, args) =>
+            {
+                (_appStatus.UserName, _appStatus.Password) = (s.Content as LoginPage).GetBoxInfo();
+                _appStatus.Save();
+            };
+            var result = await dialog.ShowAsync();
         }
 
         private void OnNavViewItemSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             if (args.IsSettingsSelected)
             {
-                this.contentFrame.NavigateToType(typeof(ConfigPage), null, this.navOptions);
+                contentFrame.NavigateToType(typeof(ConfigPage), null, navOptions);
             }
             else
             {
                 var selectedTag = (args.SelectedItem as NavigationViewItem).Tag.ToString();
                 if (selectedTag == "AccountPage")
                 {
-                    
+
                 }
                 string pageName = "OhMyWhut.Win.Pages." + selectedTag;
-                this.contentFrame.NavigateToType(Type.GetType(pageName), null, this.navOptions);
+                contentFrame.NavigateToType(Type.GetType(pageName), null, navOptions);
             }
         }
     }

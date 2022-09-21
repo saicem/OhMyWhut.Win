@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace OhMyWhut.Win.Data
 {
-    internal class Preferences
+    public class Preference
     {
-        public const string Username = nameof(Username);
-        public const string Password = nameof(Password);
+        public string Key { get; set; }
+        public string Value { get; set; }
     }
 }
