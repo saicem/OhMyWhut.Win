@@ -18,7 +18,7 @@ namespace OhMyWhut.Win
     /// </summary>
     public partial class App : Application
     {
-        public static readonly string DataFolder = Path.Join(Package.Current.InstalledPath, "OhMyWhut");
+        public static readonly string DataFolder = Path.Join(Directory.GetParent(Environment.ProcessPath).FullName, "OhMyWhut");
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code

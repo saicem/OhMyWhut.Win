@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using OhMyWhut.Engine;
 using OhMyWhut.Win.Pages;
 using OhMyWhut.Win.Services;
 
@@ -31,6 +32,9 @@ namespace OhMyWhut.Win
                 if (!_appStatus.IsLogin)
                 {
                     ShowLoginDialog();
+                }else
+                {
+                    Init();
                 }
             }));
 
@@ -52,8 +56,30 @@ namespace OhMyWhut.Win
             {
                 (_appStatus.UserName, _appStatus.Password) = (s.Content as LoginPage).GetBoxInfo();
                 _appStatus.Save();
+                Init();
             };
-            var result = await dialog.ShowAsync();
+            _ = await dialog.ShowAsync();
+        }
+
+        private void Init()
+        {
+            using (var scope = App.Current.Services.CreateScope())
+            {
+                var gluttony = scope.ServiceProvider.GetService<Gluttony>();
+                try
+                {
+                    gluttony.LoginAsync(_appStatus.UserName, _appStatus.Password).ContinueWith((task) =>
+                    {
+                        var books = gluttony.GetBooksAsync().Result;
+                        Console.WriteLine(books);
+                    });
+                }
+                catch (Exception)
+                {
+                    // TODO show notification
+                    throw;
+                }
+            };
         }
 
         private void OnNavViewItemSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

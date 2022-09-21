@@ -13,6 +13,8 @@ namespace OhMyWhut.Win.Data
 
         internal DbSet<Preference> Preferences { get; set; }
 
+        internal DbSet<Log> Logs { get; set; }
+
         public AppDbContext()
         {
 
@@ -61,6 +63,13 @@ namespace OhMyWhut.Win.Data
                 eb.Property(x => x.Unit).HasMaxLength(4).IsFixedLength(true);
                 eb.Property(x => x.RemainName).HasMaxLength(4).IsFixedLength(true);
                 eb.Property(x => x.CreatedAt).ValueGeneratedOnAdd();
+            });
+
+            builder.Entity<Log>(eb =>
+            {
+                eb.HasKey(x => x.Id);
+                eb.HasIndex(x => x.Name);
+                eb.Property(x => x.Name).HasMaxLength(64);
             });
 
             base.OnModelCreating(builder);

@@ -37,7 +37,7 @@ namespace OhMyWhut.Win.Services
         /// </summary>
         public bool IsLogin
         {
-            get => db.Preferences.Find(nameof(IsLogin)) is not null;
+            get => db.Preferences.Find(nameof(UserName)) is not null;
         }
 
         /// <summary>
