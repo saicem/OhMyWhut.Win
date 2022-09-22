@@ -65,7 +65,7 @@ namespace OhMyWhut.Win
             services.AddLogging();
             services.AddAppDbContext();
             services.AddAppStatus();
-            services.AddGluttony();
+            services.AddDataFetcher();
 
             return services.BuildServiceProvider();
         }

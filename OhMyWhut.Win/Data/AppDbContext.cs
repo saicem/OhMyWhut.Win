@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using OhMyWhut.Win.Migrations;
 
 namespace OhMyWhut.Win.Data
 {
-    internal class AppDbContext : DbContext
+    public class AppDbContext : DbContext
     {
         internal DbSet<DetailCourse> AllCourses { get; set; }
 
@@ -23,6 +24,15 @@ namespace OhMyWhut.Win.Data
         public AppDbContext(DbContextOptions<AppDbContext> options)
        : base(options)
         {
+        }
+
+        public void AddLog(string name, string data)
+        {
+            _ = Logs.AddAsync(new Log
+            {
+                Name = name,
+                Data = data,
+            });
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -70,6 +80,7 @@ namespace OhMyWhut.Win.Data
                 eb.HasKey(x => x.Id);
                 eb.HasIndex(x => x.Name);
                 eb.Property(x => x.Name).HasMaxLength(64);
+                eb.Property(x => x.CreatedAt).HasDefaultValueSql("datetime()");
             });
 
             base.OnModelCreating(builder);

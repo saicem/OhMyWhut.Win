@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using OhMyWhut.Engine;
 using OhMyWhut.Win.Pages;
 using OhMyWhut.Win.Services;
 
@@ -19,7 +20,7 @@ namespace OhMyWhut.Win
     {
         private readonly FrameNavigationOptions navOptions;
         private readonly AppStatus _appStatus;
-        private AppWindow m_AppWindow;
+        private readonly DataFetcher _dataFetcher;
 
         public MainWindow()
         {
@@ -27,6 +28,7 @@ namespace OhMyWhut.Win
             SetTitleBar(AppTitleBar);
 
             _appStatus = App.Current.Services.GetService<AppStatus>();
+            _dataFetcher = App.Current.Services.GetService<DataFetcher>();
             InitializeComponent();
 
             Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread().TryEnqueue(
@@ -36,9 +38,10 @@ namespace OhMyWhut.Win
                 if (!_appStatus.IsLogin)
                 {
                     ShowLoginDialog();
-                }else
+                }
+                else
                 {
-                    Init();
+                    _ = _dataFetcher.UpdateUserInfo(_appStatus.UserName, _appStatus.Password).LoginAsync();
                 }
             }));
 
@@ -47,14 +50,7 @@ namespace OhMyWhut.Win
             NavView.SelectedItem = HomeNavItem;
         }
 
-        private AppWindow GetAppWindowForCurrentWindow()
-        {
-            IntPtr hWnd = WindowNative.GetWindowHandle(this);
-            WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-            return AppWindow.GetFromWindowId(wndId);
-        }
-
-        private async void ShowLoginDialog()
+        private void ShowLoginDialog()
         {
             ContentDialog dialog = new ContentDialog();
             dialog.XamlRoot = root.XamlRoot;
@@ -67,30 +63,9 @@ namespace OhMyWhut.Win
             {
                 (_appStatus.UserName, _appStatus.Password) = (s.Content as LoginPage).GetBoxInfo();
                 _appStatus.Save();
-                Init();
+                _ = _dataFetcher.UpdateUserInfo(_appStatus.UserName, _appStatus.Password).LoginAsync();
             };
-            _ = await dialog.ShowAsync();
-        }
-
-        private void Init()
-        {
-            using (var scope = App.Current.Services.CreateScope())
-            {
-                var gluttony = scope.ServiceProvider.GetService<Gluttony>();
-                try
-                {
-                    gluttony.LoginAsync(_appStatus.UserName, _appStatus.Password).ContinueWith((task) =>
-                    {
-                        var books = gluttony.GetBooksAsync().Result;
-                        Console.WriteLine(books);
-                    });
-                }
-                catch (Exception)
-                {
-                    // TODO show notification
-                    throw;
-                }
-            };
+            _ = dialog.ShowAsync();
         }
 
         private void OnNavViewItemSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

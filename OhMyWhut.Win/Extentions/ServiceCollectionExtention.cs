@@ -27,9 +27,9 @@ namespace OhMyWhut.Win.Extentions
             return services.AddSingleton<AppStatus>();
         }
 
-        internal static IServiceCollection AddGluttony(this IServiceCollection services)
+        internal static IServiceCollection AddDataFetcher(this IServiceCollection services)
         {
-            return services.AddSingleton<Gluttony>();
+            return services.AddSingleton<DataFetcher>();
         }
     }
 }

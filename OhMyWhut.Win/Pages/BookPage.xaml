@@ -22,7 +22,7 @@
         </DataTemplate>
     </Page.Resources>
     <Grid>
-        <ListView x:Name="bookListView"
+        <ListView x:Name="BookListView"
                   SelectionMode="Single"
                   ItemTemplate="{StaticResource BookListViewTemplate}" />
     </Grid>
