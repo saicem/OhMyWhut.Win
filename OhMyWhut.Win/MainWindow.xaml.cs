@@ -19,9 +19,13 @@ namespace OhMyWhut.Win
     {
         private readonly FrameNavigationOptions navOptions;
         private readonly AppStatus _appStatus;
+        private AppWindow m_AppWindow;
 
         public MainWindow()
         {
+            ExtendsContentIntoTitleBar = true;
+            SetTitleBar(AppTitleBar);
+
             _appStatus = App.Current.Services.GetService<AppStatus>();
             InitializeComponent();
 
@@ -40,7 +44,14 @@ namespace OhMyWhut.Win
 
             navOptions = new FrameNavigationOptions();
             navOptions.IsNavigationStackEnabled = false;
-            navView.SelectedItem = HomeNavItem;
+            NavView.SelectedItem = HomeNavItem;
+        }
+
+        private AppWindow GetAppWindowForCurrentWindow()
+        {
+            IntPtr hWnd = WindowNative.GetWindowHandle(this);
+            WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+            return AppWindow.GetFromWindowId(wndId);
         }
 
         private async void ShowLoginDialog()

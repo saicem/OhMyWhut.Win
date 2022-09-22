@@ -6,8 +6,29 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d">
     <Grid x:Name="root">
-        <NavigationView x:Name="navView"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="AppTitleBar">
+            <Image Source="Images/WindowIcon.png"
+                   HorizontalAlignment="Left"
+                   Width="16"
+                   Height="16"
+                   Margin="8,0" />
+            <TextBlock x:Name="AppTitleTextBlock"
+                       Text="App title"
+                       TextWrapping="NoWrap"
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       VerticalAlignment="Center"
+                       Margin="28,0,0,0" />
+        </Grid>
+        
+        <NavigationView x:Name="NavView"
+                        Grid.Row="1"
                         IsBackButtonVisible="Collapsed"
+                        IsSettingsVisible="False"
                         SelectionChanged="OnNavViewItemSelectionChanged">
             <NavigationView.MenuItems>
                 <NavigationViewItem  x:Name="HomeNavItem"
