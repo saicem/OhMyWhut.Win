@@ -85,5 +85,10 @@ namespace OhMyWhut.Win
                 contentFrame.NavigateToType(Type.GetType(pageName), null, navOptions);
             }
         }
+
+        private void UserView_Click(object sender, RoutedEventArgs e)
+        {
+            ShowLoginDialog();
+        }
     }
 }

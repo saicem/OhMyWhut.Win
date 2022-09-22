@@ -11,20 +11,38 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <Grid x:Name="AppTitleBar">
-            <Image Source="Images/WindowIcon.png"
-                   HorizontalAlignment="Left"
-                   Width="16"
-                   Height="16"
-                   Margin="8,0" />
-            <TextBlock x:Name="AppTitleTextBlock"
-                       Text="App title"
-                       TextWrapping="NoWrap"
-                       Style="{StaticResource CaptionTextBlockStyle}"
-                       VerticalAlignment="Center"
-                       Margin="28,0,0,0" />
+        <Grid x:Name="AppTitleBar"
+              Margin="0,0,180,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="0">
+                <Image Source="Images/WindowIcon.png"
+                       HorizontalAlignment="Left"
+                       Width="16"
+                       Height="16"
+                       Margin="8,0" />
+                <TextBlock x:Name="AppTitleTextBlock"
+                           Text="App title"
+                           TextWrapping="NoWrap"
+                           Style="{StaticResource CaptionTextBlockStyle}"
+                           VerticalAlignment="Center"
+                           Margin="28,0,0,0" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        FlowDirection="RightToLeft"
+                        Grid.Column="1">
+                <Button x:Name="UserView"
+                        FontSize="12"
+                        Content="未登录"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Click="UserView_Click"/>
+            </StackPanel>
         </Grid>
-        
+
         <NavigationView x:Name="NavView"
                         Grid.Row="1"
                         IsBackButtonVisible="Collapsed"
