@@ -34,7 +34,7 @@
             <StackPanel Orientation="Horizontal"
                         FlowDirection="RightToLeft"
                         Grid.Column="1">
-                <Button x:Name="UserView"
+                <Button x:Name="UserStatusButton"
                         FontSize="12"
                         Content="未登录"
                         HorizontalAlignment="Right"

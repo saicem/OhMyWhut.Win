@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using HtmlAgilityPack;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
@@ -7,6 +9,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using OhMyWhut.Win.Pages;
 using OhMyWhut.Win.Services;
+using Windows.ApplicationModel.Core;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -42,6 +45,7 @@ namespace OhMyWhut.Win
                 else
                 {
                     _ = _dataFetcher.UpdateUserInfo(_appStatus.UserName, _appStatus.Password).LoginAsync();
+                    UserStatusButton.Content = _appStatus.Name;
                 }
             }));
 
@@ -63,9 +67,22 @@ namespace OhMyWhut.Win
             {
                 (_appStatus.UserName, _appStatus.Password) = (s.Content as LoginPage).GetBoxInfo();
                 _appStatus.Save();
-                _ = _dataFetcher.UpdateUserInfo(_appStatus.UserName, _appStatus.Password).LoginAsync();
+                _ = _dataFetcher.UpdateUserInfo(_appStatus.UserName, _appStatus.Password).LoginAsync().ContinueWith((t) =>
+                {
+                    _ = UpdateNameAsync();
+                }, TaskScheduler.Default);
             };
             _ = dialog.ShowAsync();
+        }
+
+        private async Task UpdateNameAsync()
+        {
+            var name = await _dataFetcher.GetUserNameAsync();
+
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                UserStatusButton.Content = name;
+            });
         }
 
         private void OnNavViewItemSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -77,10 +94,6 @@ namespace OhMyWhut.Win
             else
             {
                 var selectedTag = (args.SelectedItem as NavigationViewItem).Tag.ToString();
-                if (selectedTag == "AccountPage")
-                {
-
-                }
                 string pageName = "OhMyWhut.Win.Pages." + selectedTag;
                 contentFrame.NavigateToType(Type.GetType(pageName), null, navOptions);
             }

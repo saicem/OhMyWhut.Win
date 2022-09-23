@@ -16,6 +16,7 @@
 		<DefaultLanguage>zh-CN</DefaultLanguage>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="OhMyWhut\app.db" />
     <None Remove="Pages\BookPage.xaml" />
     <None Remove="Pages\ConfigPage.xaml" />
     <None Remove="Pages\CoursePage.xaml" />
@@ -32,6 +33,12 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="OhMyWhut\app.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
 	<ItemGroup>

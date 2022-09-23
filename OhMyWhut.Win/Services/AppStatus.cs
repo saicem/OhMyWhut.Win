@@ -64,6 +64,15 @@ namespace OhMyWhut.Win.Services
             }
         }
 
+        public string Name
+        {
+            get => db.Preferences.Find(nameof(Name))?.Value  ?? "未登录";
+            set
+            {
+                AddOrModify(nameof(Name), value);
+            }
+        }
+
         public void Save()
         {
             _ = db.SaveChangesAsync();

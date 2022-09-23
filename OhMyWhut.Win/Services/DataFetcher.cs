@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HtmlAgilityPack;
 using Microsoft.Toolkit.Uwp.Notifications;
 using OhMyWhut.Engine;
 using OhMyWhut.Engine.Exceptions;
@@ -31,7 +32,7 @@ namespace OhMyWhut.Win.Services
             return this;
         }
 
-        public async Task LoginAsync()
+        public async Task<DataFetcher> LoginAsync()
         {
             try
             {
@@ -46,6 +47,7 @@ namespace OhMyWhut.Win.Services
                     .Show(new ToastNotification(new ToastContentBuilder().AddText(ex.Message).GetToastContent().GetXml()));
                 _db.AddLog("login", "faild");
             }
+            return this;
         }
 
         public async Task<IEnumerable<Engine.Data.Book>> GetBooksAsync()
@@ -73,6 +75,19 @@ namespace OhMyWhut.Win.Services
                 await LoginAsync();
             }
             return await gluttony.GetElectricFeeAsync(meterId, factoryCode).ConfigureAwait(false);
+        }
+
+        public async Task<string> GetUserNameAsync()
+        {
+            if (!isLogin)
+            {
+                await LoginAsync();
+            }
+            var res = await gluttony.LoginToJwc();
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.Load(res);
+            var name = htmlDoc.DocumentNode.SelectSingleNode("html/body/div/div[1]/div[1]/div[1]/div/div[2]/div[1]/p/b").InnerText;
+            return name;
         }
     }
 }
