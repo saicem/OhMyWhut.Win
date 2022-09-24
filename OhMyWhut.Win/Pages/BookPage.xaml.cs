@@ -25,13 +25,9 @@ namespace OhMyWhut.Win.Pages
     /// </summary>
     public sealed partial class BookPage : Page
     {
-        private readonly AppDbContext _appDbContext;
-
         public BookPage()
         {
-            _appDbContext = App.Current.Services.GetService<AppDbContext>();
             InitializeComponent();
-            BookListView.ItemsSource = _appDbContext.Books.AsEnumerable();
         }
     }
 }

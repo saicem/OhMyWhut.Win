@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Toolkit.Uwp.Notifications;
 using OhMyWhut.Engine;
 using OhMyWhut.Engine.Exceptions;
@@ -19,7 +20,10 @@ namespace OhMyWhut.Win.Services
         private readonly Logger _logger;
         private string username;
         private string password;
+        private string meterId;
+        private string factoryCode;
         private bool isLogin = false;
+        private bool isSetElectricMeter = false;
 
         public DataFetcher(AppDbContext db, Logger logger)
         {
@@ -27,11 +31,18 @@ namespace OhMyWhut.Win.Services
             _logger = logger;
         }
 
-        public DataFetcher UpdateUserInfo(string username, string password)
+        public void SetUserInfo(string username, string password)
         {
             this.username = username;
             this.password = password;
-            return this;
+            isLogin = true;
+        }
+
+        public void SetMeter(string meterId, string factoryCode)
+        {
+            this.meterId = meterId;
+            this.factoryCode = factoryCode;
+            isSetElectricMeter = true;
         }
 
         public async Task<DataFetcher> LoginAsync()
@@ -42,6 +53,7 @@ namespace OhMyWhut.Win.Services
                 ToastNotificationManager.CreateToastNotifier()
                     .Show(new ToastNotification(new ToastContentBuilder().AddText("登录成功").GetToastContent().GetXml()));
                 _ = _logger.AddLogAsync(LogType.Login, "success");
+                isLogin = true;
             }
             catch (RequestFailedException ex)
             {
@@ -52,16 +64,28 @@ namespace OhMyWhut.Win.Services
             return this;
         }
 
-        public async Task<IEnumerable<Engine.Data.Book>> GetBooksAsync()
+        public async Task UpdateDataAsync()
         {
-            if (!isLogin)
-            {
-                await LoginAsync();
-            }
-            return await gluttony.GetBooksAsync().ConfigureAwait(false);
+            await UpdateCoursesAsync();
+            await UpdateBooksAsync();
+            await UpdateElectricFeeAsync();
         }
 
-        public async Task<IEnumerable<Engine.Data.Course>> GetCoursesAsync()
+        public async Task<List<MyCourse>> GetCoursesAsync()
+        {
+            await UpdateCoursesAsync();
+            return await _db.MyCourses.AsNoTracking().ToListAsync();
+        }
+
+        private async Task UpdateCoursesAsync()
+        {
+            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchCourses) < TimeSpan.FromDays(7))
+            {
+                _ = FetchCoursesAsync();
+            }
+        }
+
+        private async Task<IEnumerable<Engine.Data.Course>> FetchCoursesAsync()
         {
             if (!isLogin)
             {
@@ -70,7 +94,45 @@ namespace OhMyWhut.Win.Services
             return await gluttony.GetMyCoursesAsync().ConfigureAwait(false);
         }
 
-        public async Task<Engine.Data.ElectricFee> GetElectricFeeAsync(string meterId, string factoryCode)
+        public async Task<IList<Book>> GetBooksAsync()
+        {
+            await UpdateBooksAsync();
+            return await _db.Books.AsNoTracking().ToListAsync();
+        }
+
+        private async Task UpdateBooksAsync()
+        {
+            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchBooks) < TimeSpan.FromDays(1))
+            {
+                _ = FetchBooksAsync();
+            }
+        }
+
+        private async Task<IEnumerable<Engine.Data.Book>> FetchBooksAsync()
+        {
+            // TODO 应该增加登录失败的处理逻辑，这部分逻辑由 gluttony 解决
+            if (!isLogin || !isSetElectricMeter)
+            {
+                throw new NotImplementedException();
+            }
+            return await gluttony.GetBooksAsync().ConfigureAwait(false);
+        }
+
+        public async Task<List<ElectricFee>> GetElectricFeeAsync()
+        {
+            await UpdateElectricFeeAsync();
+            return await _db.ElectricFees.AsNoTracking().ToListAsync();
+        }
+
+        private async Task UpdateElectricFeeAsync()
+        {
+            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchElectricFee) < TimeSpan.FromHours(2))
+            {
+                _ = FetchElectricFeeAsync();
+            }
+        }
+        
+        private async Task<Engine.Data.ElectricFee> FetchElectricFeeAsync()
         {
             if (!isLogin)
             {
@@ -79,7 +141,7 @@ namespace OhMyWhut.Win.Services
             return await gluttony.GetElectricFeeAsync(meterId, factoryCode).ConfigureAwait(false);
         }
 
-        public async Task<string> GetUserNameAsync()
+        private async Task<string> FetchUserNameAsync()
         {
             if (!isLogin)
             {

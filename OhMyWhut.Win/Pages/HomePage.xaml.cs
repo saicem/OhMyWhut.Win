@@ -14,22 +14,9 @@ namespace OhMyWhut.Win.Pages
     /// </summary>
     public sealed partial class HomePage : Page
     {
-        private readonly ILogger _logger;
-        private readonly AppDbContext _db;
-        private readonly AppStatus _appStatus;
-
         public HomePage()
         {
-            _logger = App.Current.Services.GetService<ILogger>();
-            _db = App.Current.Services.GetService<AppDbContext>();
-            _appStatus = App.Current.Services.GetService<AppStatus>();
-
             InitializeComponent();
-
-            if (!_appStatus.IsLogin)
-            {
-
-            }
         }
     }
 }

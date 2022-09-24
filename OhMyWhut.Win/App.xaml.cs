@@ -63,10 +63,10 @@ namespace OhMyWhut.Win
         private static IServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
+            services.AddSingleton<AppPreference>();
             services.AddAppDbContext();
-            services.AddSingleton<Logger>();
-            services.AddSingleton<AppStatus>();
-            services.AddSingleton<DataFetcher>();
+            services.AddScoped<Logger>();
+            services.AddScoped<DataFetcher>();
 
             return services.BuildServiceProvider();
         }

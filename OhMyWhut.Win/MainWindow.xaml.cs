@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using OhMyWhut.Win.Data;
 using OhMyWhut.Win.Pages;
 using OhMyWhut.Win.Services;
 using Windows.Foundation.Metadata;
@@ -18,31 +19,28 @@ namespace OhMyWhut.Win
     public sealed partial class MainWindow : Window
     {
         private readonly FrameNavigationOptions navOptions;
-        private readonly AppStatus _appStatus;
-        private readonly DataFetcher _dataFetcher;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD002:Avoid problematic synchronous waits", Justification = "<挂起>")]
         public MainWindow()
         {
-            _appStatus = App.Current.Services.GetService<AppStatus>();
-            _dataFetcher = App.Current.Services.GetService<DataFetcher>();
+            using (var scope = App.Current.Services.CreateScope())
+            {
+                var appPreference = scope.ServiceProvider.GetService<AppPreference>();
+                appPreference.LoadFromDatabaseAsync(scope.ServiceProvider.GetService<AppDbContext>()).Wait();
+                // TODO 更优雅的判断方式
+                if (appPreference.UserName == string.Empty)
+                {
+                    ShowLoginDialog();
+                }
+            }
 
             InitializeComponent();
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
 
-            CheckLoginStatus();
-
             navOptions = new FrameNavigationOptions();
             navOptions.IsNavigationStackEnabled = false;
             NavigationViewControl.SelectedItem = HomeNavItem;
-        }
-
-        public void CheckLoginStatus()
-        {
-            if (!_appStatus.IsLogin)
-            {
-                ShowLoginDialog();
-            }
         }
 
         private void ShowLoginDialog()
@@ -56,9 +54,12 @@ namespace OhMyWhut.Win
             dialog.Content = new LoginPage();
             dialog.PrimaryButtonClick += (s, args) =>
             {
-                (_appStatus.UserName, _appStatus.Password) = (s.Content as LoginPage).GetBoxInfo();
-                _appStatus.Save();
-                _ = _dataFetcher.UpdateUserInfo(_appStatus.UserName, _appStatus.Password).LoginAsync();
+                using (var scope = App.Current.Services.CreateScope())
+                {
+                    var appPreference = scope.ServiceProvider.GetService<AppPreference>();
+                    (appPreference.UserName, appPreference.Password) = (s.Content as LoginPage).GetBoxInfo();
+                    _ = appPreference.SaveAsync(scope.ServiceProvider.GetService<AppDbContext>());
+                }
             };
             _ = dialog.ShowAsync();
         }
