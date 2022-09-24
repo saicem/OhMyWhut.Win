@@ -21,15 +21,5 @@ namespace OhMyWhut.Win.Extentions
                 x.UseSqlite($"Data Source = {System.IO.Path.Join(path, "ohmywhut.db")}");
             });
         }
-
-        internal static IServiceCollection AddAppStatus(this IServiceCollection services)
-        {
-            return services.AddSingleton<AppStatus>();
-        }
-
-        internal static IServiceCollection AddDataFetcher(this IServiceCollection services)
-        {
-            return services.AddSingleton<DataFetcher>();
-        }
     }
 }

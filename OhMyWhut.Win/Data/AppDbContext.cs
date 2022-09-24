@@ -26,15 +26,6 @@ namespace OhMyWhut.Win.Data
         {
         }
 
-        public void AddLog(string name, string data)
-        {
-            _ = Logs.AddAsync(new Log
-            {
-                Name = name,
-                Data = data,
-            });
-        }
-
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             options.UseSqlite($"Data Source={System.IO.Path.Join(App.DataFolder, "app.db")}");
@@ -78,8 +69,7 @@ namespace OhMyWhut.Win.Data
             builder.Entity<Log>(eb =>
             {
                 eb.HasKey(x => x.Id);
-                eb.HasIndex(x => x.Name);
-                eb.Property(x => x.Name).HasMaxLength(64);
+                eb.HasIndex(x => x.Type);
                 eb.Property(x => x.CreatedAt).HasDefaultValueSql("datetime()");
             });
 

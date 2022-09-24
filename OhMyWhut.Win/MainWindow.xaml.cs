@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
-using HtmlAgilityPack;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using OhMyWhut.Win.Pages;
 using OhMyWhut.Win.Services;
-using Windows.ApplicationModel.Core;
+using Windows.Foundation.Metadata;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -27,31 +23,26 @@ namespace OhMyWhut.Win
 
         public MainWindow()
         {
+            _appStatus = App.Current.Services.GetService<AppStatus>();
+            _dataFetcher = App.Current.Services.GetService<DataFetcher>();
+
+            InitializeComponent();
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(AppTitleBar);
 
-            _appStatus = App.Current.Services.GetService<AppStatus>();
-            _dataFetcher = App.Current.Services.GetService<DataFetcher>();
-            InitializeComponent();
-
-            Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread().TryEnqueue(
-            Microsoft.UI.Dispatching.DispatcherQueuePriority.Low,
-            new Microsoft.UI.Dispatching.DispatcherQueueHandler(() =>
-            {
-                if (!_appStatus.IsLogin)
-                {
-                    ShowLoginDialog();
-                }
-                else
-                {
-                    _ = _dataFetcher.UpdateUserInfo(_appStatus.UserName, _appStatus.Password).LoginAsync();
-                    UserStatusButton.Content = _appStatus.Name;
-                }
-            }));
+            CheckLoginStatus();
 
             navOptions = new FrameNavigationOptions();
             navOptions.IsNavigationStackEnabled = false;
-            NavView.SelectedItem = HomeNavItem;
+            NavigationViewControl.SelectedItem = HomeNavItem;
+        }
+
+        public void CheckLoginStatus()
+        {
+            if (!_appStatus.IsLogin)
+            {
+                ShowLoginDialog();
+            }
         }
 
         private void ShowLoginDialog()
@@ -67,41 +58,99 @@ namespace OhMyWhut.Win
             {
                 (_appStatus.UserName, _appStatus.Password) = (s.Content as LoginPage).GetBoxInfo();
                 _appStatus.Save();
-                _ = _dataFetcher.UpdateUserInfo(_appStatus.UserName, _appStatus.Password).LoginAsync().ContinueWith((t) =>
-                {
-                    _ = UpdateNameAsync();
-                }, TaskScheduler.Default);
+                _ = _dataFetcher.UpdateUserInfo(_appStatus.UserName, _appStatus.Password).LoginAsync();
             };
             _ = dialog.ShowAsync();
         }
 
-        private async Task UpdateNameAsync()
+        public string AppTitleText
         {
-            var name = await _dataFetcher.GetUserNameAsync();
-
-            DispatcherQueue.TryEnqueue(() =>
+            get
             {
-                UserStatusButton.Content = name;
-            });
+#if !UNIVERSAL && DEBUG
+                return "OhMyWhut Dev";
+#elif !UNIVERSAL
+                return "OhMyWhut";
+#elif DEBUG
+                return "OhMyWhut (UWP)";
+#else
+                return "OhMyWhut (UWP)";
+#endif
+            }
         }
 
         private void OnNavViewItemSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
             if (args.IsSettingsSelected)
             {
-                contentFrame.NavigateToType(typeof(ConfigPage), null, navOptions);
+                rootFrame.NavigateToType(typeof(ConfigPage), null, navOptions);
             }
             else
             {
                 var selectedTag = (args.SelectedItem as NavigationViewItem).Tag.ToString();
                 string pageName = "OhMyWhut.Win.Pages." + selectedTag;
-                contentFrame.NavigateToType(Type.GetType(pageName), null, navOptions);
+                rootFrame.NavigateToType(Type.GetType(pageName), null, navOptions);
             }
         }
 
-        private void UserView_Click(object sender, RoutedEventArgs e)
+        private void NavigationViewControl_DisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
         {
-            ShowLoginDialog();
+            Thickness currMargin = AppTitleBar.Margin;
+            if (sender.DisplayMode == NavigationViewDisplayMode.Minimal)
+            {
+                AppTitleBar.Margin = new Thickness() { Left = (sender.CompactPaneLength * 2), Top = currMargin.Top, Right = currMargin.Right, Bottom = currMargin.Bottom };
+
+            }
+            else
+            {
+                AppTitleBar.Margin = new Thickness() { Left = sender.CompactPaneLength, Top = currMargin.Top, Right = currMargin.Right, Bottom = currMargin.Bottom };
+            }
+
+            UpdateAppTitleMargin(sender);
+        }
+
+        private void NavigationViewControl_PaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs args)
+        {
+            UpdateAppTitleMargin(sender);
+        }
+
+        private void NavigationViewControl_PaneOpening(NavigationView sender, object args)
+        {
+            UpdateAppTitleMargin(sender);
+        }
+
+        private void UpdateAppTitleMargin(NavigationView sender)
+        {
+            const int smallLeftIndent = 4, largeLeftIndent = 24;
+
+            if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 7))
+            {
+                AppTitle.TranslationTransition = new Vector3Transition();
+
+                if ((sender.DisplayMode == NavigationViewDisplayMode.Expanded && sender.IsPaneOpen) ||
+                         sender.DisplayMode == NavigationViewDisplayMode.Minimal)
+                {
+                    AppTitle.Translation = new System.Numerics.Vector3(smallLeftIndent, 0, 0);
+                }
+                else
+                {
+                    AppTitle.Translation = new System.Numerics.Vector3(largeLeftIndent, 0, 0);
+                }
+            }
+            else
+            {
+                Thickness currMargin = AppTitle.Margin;
+
+                if ((sender.DisplayMode == NavigationViewDisplayMode.Expanded && sender.IsPaneOpen) ||
+                         sender.DisplayMode == NavigationViewDisplayMode.Minimal)
+                {
+                    AppTitle.Margin = new Thickness() { Left = smallLeftIndent, Top = currMargin.Top, Right = currMargin.Right, Bottom = currMargin.Bottom };
+                }
+                else
+                {
+                    AppTitle.Margin = new Thickness() { Left = largeLeftIndent, Top = currMargin.Top, Right = currMargin.Right, Bottom = currMargin.Bottom };
+                }
+            }
         }
     }
 }

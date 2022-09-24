@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using OhMyWhut.Win.Data;
 using OhMyWhut.Win.Extentions;
+using OhMyWhut.Win.Services;
 using Windows.ApplicationModel;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -62,10 +63,10 @@ namespace OhMyWhut.Win
         private static IServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
-            services.AddLogging();
             services.AddAppDbContext();
-            services.AddAppStatus();
-            services.AddDataFetcher();
+            services.AddSingleton<Logger>();
+            services.AddSingleton<AppStatus>();
+            services.AddSingleton<DataFetcher>();
 
             return services.BuildServiceProvider();
         }

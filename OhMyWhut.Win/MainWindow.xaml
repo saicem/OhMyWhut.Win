@@ -5,48 +5,29 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d">
-    <Grid x:Name="root">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="32" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
+    <Grid x:Name="root"
+          Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <Grid x:Name="AppTitleBar"
-              Margin="0,0,180,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal"
-                        Grid.Column="0">
-                <Image Source="Images/WindowIcon.png"
-                       HorizontalAlignment="Left"
-                       Width="16"
-                       Height="16"
-                       Margin="8,0" />
-                <TextBlock x:Name="AppTitleTextBlock"
-                           Text="App title"
-                           TextWrapping="NoWrap"
-                           Style="{StaticResource CaptionTextBlockStyle}"
-                           VerticalAlignment="Center"
-                           Margin="28,0,0,0" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal"
-                        FlowDirection="RightToLeft"
-                        Grid.Column="1">
-                <Button x:Name="UserStatusButton"
-                        FontSize="12"
-                        Content="未登录"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Click="UserView_Click"/>
-            </StackPanel>
-        </Grid>
+        <Border x:Name="AppTitleBar"
+                IsHitTestVisible="True"
+                VerticalAlignment="Top"
+                Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
+                Canvas.ZIndex="1">
+            <TextBlock x:Name="AppTitle"
+                       Text="{x:Bind AppTitleText}"
+                       VerticalAlignment="Top"
+                       Margin="0,15,0,0"
+                       Style="{StaticResource CaptionTextBlockStyle}" />
+        </Border>
 
-        <NavigationView x:Name="NavView"
-                        Grid.Row="1"
+        <NavigationView x:Name="NavigationViewControl"
+                        Canvas.ZIndex="0"
+                        IsTabStop="False"
+                        IsTitleBarAutoPaddingEnabled="False"
                         IsBackButtonVisible="Collapsed"
-                        IsSettingsVisible="False"
+                        PaneOpening="NavigationViewControl_PaneOpening"
+                        PaneClosing="NavigationViewControl_PaneClosing"
+                        DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
                         SelectionChanged="OnNavViewItemSelectionChanged">
             <NavigationView.MenuItems>
                 <NavigationViewItem  x:Name="HomeNavItem"
@@ -61,10 +42,15 @@
                                     Tag="BookPage" />
                 <NavigationViewItem Icon="Shop"
                                     Content="电费"
-                                    Tag="ElectricPage">
-                </NavigationViewItem>
+                                    Tag="ElectricPage" />
             </NavigationView.MenuItems>
-            <Frame x:Name="contentFrame" />
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem Icon="Contact"
+                                    Content="我"
+                                    Tag="UserPage" />
+            </NavigationView.FooterMenuItems>
+            <Frame x:Name="rootFrame"
+                   Margin="0,48,0,0" />
         </NavigationView>
     </Grid>
 </Window>

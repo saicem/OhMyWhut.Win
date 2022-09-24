@@ -10,7 +10,6 @@
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
-            <SolidColorBrush x:Key="WindowCaptionBackground">White</SolidColorBrush>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

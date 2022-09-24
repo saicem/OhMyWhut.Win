@@ -23,6 +23,7 @@
     <None Remove="Pages\ElectricPage.xaml" />
     <None Remove="Pages\HomePage.xaml" />
     <None Remove="Pages\LoginPage.xaml" />
+    <None Remove="Pages\UserPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -99,6 +100,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\UserPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <!-- 

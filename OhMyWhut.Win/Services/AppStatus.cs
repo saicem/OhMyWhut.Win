@@ -2,25 +2,29 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OhMyWhut.Win.Data;
 
 namespace OhMyWhut.Win.Services
 {
     internal class AppStatus
     {
-        private readonly AppDbContext db;
+        private readonly AppDbContext _db;
+        private readonly Logger _logger;
 
-        public AppStatus(AppDbContext db)
+        public AppStatus(AppDbContext db, Logger logger)
         {
-            this.db = db;
+            _db = db;
+            _logger = logger;
         }
 
         public void AddOrModify(string key, string value)
         {
-            var obj = db.Preferences.Find(key);
+            var obj = _db.Preferences.Find(key);
             if (obj is null)
             {
-                db.Preferences.Add(new Preference
+                _db.Preferences.Add(new Preference
                 {
                     Key = key,
                     Value = value
@@ -37,7 +41,7 @@ namespace OhMyWhut.Win.Services
         /// </summary>
         public bool IsLogin
         {
-            get => db.Preferences.Find(nameof(UserName)) is not null;
+            get => _db.Preferences.Find(nameof(UserName)) is not null;
         }
 
         /// <summary>
@@ -45,7 +49,7 @@ namespace OhMyWhut.Win.Services
         /// </summary>
         public string UserName
         {
-            get => db.Preferences.Find(nameof(UserName)).Value;
+            get => _db.Preferences.Find(nameof(UserName)).Value;
             set
             {
                 AddOrModify(nameof(UserName), value);
@@ -57,25 +61,25 @@ namespace OhMyWhut.Win.Services
         /// </summary>
         public string Password
         {
-            get => db.Preferences.Find(nameof(Password)).Value;
+            get => _db.Preferences.Find(nameof(Password)).Value;
             set
             {
                 AddOrModify(nameof(Password), value);
             }
         }
 
-        public string Name
+        public string RealName
         {
-            get => db.Preferences.Find(nameof(Name))?.Value  ?? "未登录";
+            get => _db.Preferences.Find(nameof(RealName))?.Value  ?? "未登录";
             set
             {
-                AddOrModify(nameof(Name), value);
+                AddOrModify(nameof(RealName), value);
             }
         }
 
         public void Save()
         {
-            _ = db.SaveChangesAsync();
+            _ = _db.SaveChangesAsync();
         }
     }
 }

@@ -16,13 +16,15 @@ namespace OhMyWhut.Win.Services
     {
         private readonly Gluttony gluttony = new Gluttony();
         private readonly AppDbContext _db;
+        private readonly Logger _logger;
         private string username;
         private string password;
         private bool isLogin = false;
 
-        public DataFetcher(AppDbContext db)
+        public DataFetcher(AppDbContext db, Logger logger)
         {
             _db = db;
+            _logger = logger;
         }
 
         public DataFetcher UpdateUserInfo(string username, string password)
@@ -39,13 +41,13 @@ namespace OhMyWhut.Win.Services
                 await gluttony.LoginAsync(username, password);
                 ToastNotificationManager.CreateToastNotifier()
                     .Show(new ToastNotification(new ToastContentBuilder().AddText("登录成功").GetToastContent().GetXml()));
-                _db.AddLog("login", "success");
+                _ = _logger.AddLogAsync(LogType.Login, "success");
             }
             catch (RequestFailedException ex)
             {
                 ToastNotificationManager.CreateToastNotifier()
                     .Show(new ToastNotification(new ToastContentBuilder().AddText(ex.Message).GetToastContent().GetXml()));
-                _db.AddLog("login", "faild");
+                _ = _logger.AddLogAsync(LogType.Login, "fail");
             }
             return this;
         }
