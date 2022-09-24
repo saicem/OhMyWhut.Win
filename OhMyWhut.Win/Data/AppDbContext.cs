@@ -14,6 +14,8 @@ namespace OhMyWhut.Win.Data
 
         internal DbSet<Preference> Preferences { get; set; }
 
+        internal DbSet<ElectricFee> ElectricFees { get; set; }
+
         internal DbSet<Log> Logs { get; set; }
 
         public AppDbContext()
