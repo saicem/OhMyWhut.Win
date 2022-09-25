@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace OhMyWhut.Win.Data
         Login,
     }
 
+    [Table(nameof(Log))]
     public class Log
     {
         public long Id { get; set; }

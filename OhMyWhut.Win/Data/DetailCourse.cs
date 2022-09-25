@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OhMyWhut.Win.Data
 {
+    [Table(nameof(DetailCourse))]
     public class DetailCourse
     {
         public int Id { get; set; }
