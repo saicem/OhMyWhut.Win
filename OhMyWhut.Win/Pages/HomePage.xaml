@@ -8,10 +8,5 @@
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <StackPanel Orientation="Vertical"
-                    Width="200">
-            <TextBox x:Name="usernameBox" />
-            <PasswordBox x:Name="passwordBox" />
-        </StackPanel>
     </Grid>
 </Page>

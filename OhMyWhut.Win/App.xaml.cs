@@ -4,10 +4,10 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using OhMyWhut.Engine;
 using OhMyWhut.Win.Data;
 using OhMyWhut.Win.Extentions;
 using OhMyWhut.Win.Services;
-using Windows.ApplicationModel;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -64,6 +64,7 @@ namespace OhMyWhut.Win
         {
             var services = new ServiceCollection();
             services.AddSingleton<AppPreference>();
+            services.AddSingleton<Gluttony>();
             services.AddAppDbContext();
             services.AddScoped<Logger>();
             services.AddScoped<DataFetcher>();

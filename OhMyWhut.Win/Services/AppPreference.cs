@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OhMyWhut.Win.Data;
 
 namespace OhMyWhut.Win.Services
 {
-    internal class AppPreference
+    public class AppPreference
     {
         public string UserName { get; set; }
 
@@ -31,7 +24,7 @@ namespace OhMyWhut.Win.Services
             await db.Preferences.AsNoTracking().ForEachAsync(p =>
             {
                 var propertyInfo = GetType().GetProperty(p.Key);
-                propertyInfo.SetValue(this, Convert.ChangeType(p.Value, propertyInfo.PropertyType.GetType()));
+                propertyInfo.SetValue(this, Convert.ChangeType(p.Value, propertyInfo.PropertyType));
             });
         }
 
