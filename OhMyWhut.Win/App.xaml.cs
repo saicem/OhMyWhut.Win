@@ -8,6 +8,7 @@ using OhMyWhut.Engine;
 using OhMyWhut.Win.Data;
 using OhMyWhut.Win.Extentions;
 using OhMyWhut.Win.Services;
+using OhMyWhut.Win.ViewModels;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -21,6 +22,7 @@ namespace OhMyWhut.Win
     {
         public static readonly string DataFolder = Path.Join(Directory.GetParent(Environment.ProcessPath).FullName, "OhMyWhut");
 
+        public static MainViewModel ViewModel { get; } = new MainViewModel();
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().

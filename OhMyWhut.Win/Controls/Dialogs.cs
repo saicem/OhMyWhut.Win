@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
 using OhMyWhut.Win.Pages;
-using Windows.Foundation;
+using Microsoft.Extensions.DependencyInjection;
+using OhMyWhut.Win.Data;
+using OhMyWhut.Win.Services;
 
 namespace OhMyWhut.Win.Controls
 {
     internal class Dialogs
     {
-        internal static void ShowLoginDialog(XamlRoot root, TypedEventHandler<ContentDialog, ContentDialogButtonClickEventArgs> action)
+        internal static void ShowLoginDialog(XamlRoot root)
         {
             ContentDialog dialog = new ContentDialog();
             dialog.XamlRoot = root;
@@ -21,7 +18,15 @@ namespace OhMyWhut.Win.Controls
             dialog.CloseButtonText = "取消";
             dialog.DefaultButton = ContentDialogButton.Primary;
             dialog.Content = new LoginPage();
-            dialog.PrimaryButtonClick += action;
+            dialog.PrimaryButtonClick += (s, args) =>
+            {
+                using (var scope = App.Current.Services.CreateScope())
+                {
+                    var appPreference = scope.ServiceProvider.GetService<AppPreference>();
+                    (appPreference.UserName, appPreference.Password) = (s.Content as LoginPage).GetBoxInfo();
+                    _ = appPreference.SaveAsync(scope.ServiceProvider.GetService<AppDbContext>());
+                }
+            };
             _ = dialog.ShowAsync();
         }
     }

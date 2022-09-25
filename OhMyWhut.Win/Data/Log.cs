@@ -30,6 +30,6 @@ namespace OhMyWhut.Win.Data
 
         public string Data { get; set; }
 
-        public DateTimeOffset CreatedAt { get; } = DateTimeOffset.UtcNow; 
+        public DateTimeOffset CreatedAt { get; } = DateTimeOffset.Now; 
     }
 }

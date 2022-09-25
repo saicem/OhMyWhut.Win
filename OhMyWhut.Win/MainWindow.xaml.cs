@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using OhMyWhut.Engine;
 using OhMyWhut.Win.Controls;
 using OhMyWhut.Win.Data;
 using OhMyWhut.Win.Pages;
 using OhMyWhut.Win.Services;
-using Windows.Foundation;
 using Windows.Foundation.Metadata;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -28,20 +29,36 @@ namespace OhMyWhut.Win
             using (var scope = App.Current.Services.CreateScope())
             {
                 var appPreference = scope.ServiceProvider.GetService<AppPreference>();
+                var gluttony = scope.ServiceProvider.GetService<Gluttony>();
                 appPreference.LoadFromDatabaseAsync(scope.ServiceProvider.GetService<AppDbContext>()).Wait();
                 // TODO 更优雅的判断方式
                 if (appPreference.UserName == string.Empty)
                 {
-
-                    Dialogs.ShowLoginDialog(Root.XamlRoot, (s, args) =>
+                    Dialogs.ShowLoginDialog(Root.XamlRoot);
+                }
+                else
+                {
+                    gluttony.SetUserInfo(appPreference.UserName, appPreference.Password);
+                    new Task(() =>
                     {
                         using (var scope = App.Current.Services.CreateScope())
                         {
-                            var appPreference = scope.ServiceProvider.GetService<AppPreference>();
-                            (appPreference.UserName, appPreference.Password) = (s.Content as LoginPage).GetBoxInfo();
-                            _ = appPreference.SaveAsync(scope.ServiceProvider.GetService<AppDbContext>());
+                            var fetcher = scope.ServiceProvider.GetService<DataFetcher>();
+                            fetcher.UpdateCoursesAsync().Wait();
+                            fetcher.UpdateBooksAsync().Wait();
                         }
-                    });
+                    }).Start();
+                }
+                if (appPreference.MeterId != string.Empty)
+                {
+                    new Task(() =>
+                    {
+                        using (var scope = App.Current.Services.CreateScope())
+                        {
+                            var fetcher = scope.ServiceProvider.GetService<DataFetcher>();
+                            fetcher.UpdateElectricFeeAsync().Wait();
+                        }
+                    }).Start();
                 }
             }
 

@@ -3,7 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:OhMyWhut.Win.Pages"
-    xmlns:data="using:OhMyWhut.Engine.Data"
+    xmlns:vm="using:OhMyWhut.Win.ViewModels"
+    xmlns:data="using:OhMyWhut.Win.Data"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -18,12 +19,13 @@
                     <TextBlock Text="{x:Bind ExpireDate}" />
                 </StackPanel>
             </Grid>
-            
+
         </DataTemplate>
     </Page.Resources>
     <Grid>
         <ListView x:Name="BookListView"
                   SelectionMode="Single"
+                  ItemsSource="{x:Bind ViewModel.BookViewModel.BookList, Mode=TwoWay}"
                   ItemTemplate="{StaticResource BookListViewTemplate}" />
     </Grid>
 </Page>

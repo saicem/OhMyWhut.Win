@@ -45,22 +45,15 @@ namespace OhMyWhut.Win.Services
             return this;
         }
 
-        public async Task UpdateDataAsync()
-        {
-            await UpdateCoursesAsync();
-            await UpdateBooksAsync();
-            await UpdateElectricFeeAsync();
-        }
-
         public async Task<ICollection<MyCourse>> GetCoursesAsync()
         {
             await UpdateCoursesAsync();
             return await _db.MyCourses.AsNoTracking().ToArrayAsync();
         }
 
-        private async Task UpdateCoursesAsync()
+        public async Task UpdateCoursesAsync()
         {
-            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchCourses) >= _preference.QuerySpanCourses)
+            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchCourses) <= _preference.QuerySpanCourses)
             {
                 return;
             }
@@ -82,6 +75,7 @@ namespace OhMyWhut.Win.Services
             });
             await _db.Database.ExecuteSqlRawAsync($"DELETE FROM {nameof(MyCourse)}");
             await _db.MyCourses.AddRangeAsync(myCourseBag);
+            await _db.Logs.AddAsync(new Log(LogType.FetchCourses, "success"));
             _ = _db.SaveChangesAsync();
         }
 
@@ -91,9 +85,9 @@ namespace OhMyWhut.Win.Services
             return await _db.Books.AsNoTracking().ToListAsync();
         }
 
-        private async Task UpdateBooksAsync()
+        public async Task UpdateBooksAsync()
         {
-            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchBooks) >= _preference.QuerySpanBooks)
+            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchBooks) <= _preference.QuerySpanBooks)
             {
                 return;
             }
@@ -107,7 +101,8 @@ namespace OhMyWhut.Win.Services
                           };
             await _db.Database.ExecuteSqlRawAsync($"DELETE FROM {nameof(Book)}");
             await _db.Books.AddRangeAsync(bookBag);
-            _ = _db.SaveChangesAsync();
+            await _db.Logs.AddAsync(new Log(LogType.FetchBooks, "success"));
+            await _db.SaveChangesAsync();
         }
 
         public async Task<List<ElectricFee>> GetElectricFeeAsync()
@@ -116,9 +111,9 @@ namespace OhMyWhut.Win.Services
             return await _db.ElectricFees.AsNoTracking().ToListAsync();
         }
 
-        private async Task UpdateElectricFeeAsync()
+        public async Task UpdateElectricFeeAsync()
         {
-            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchElectricFee) >= _preference.QuerySpanElectricFee)
+            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchElectricFee) <= _preference.QuerySpanElectricFee)
             {
                 return;
             }
@@ -131,6 +126,7 @@ namespace OhMyWhut.Win.Services
                 TotalValue = fee.TotalValue,
                 Unit = fee.Unit
             });
+            await _db.Logs.AddAsync(new Log(LogType.FetchCourses, "success"));
             _ = _db.SaveChangesAsync();
         }
 
