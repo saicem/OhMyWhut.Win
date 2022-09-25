@@ -3,9 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using OhMyWhut.Win.Controls;
 using OhMyWhut.Win.Data;
 using OhMyWhut.Win.Pages;
 using OhMyWhut.Win.Services;
+using Windows.Foundation;
 using Windows.Foundation.Metadata;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -30,7 +32,16 @@ namespace OhMyWhut.Win
                 // TODO 更优雅的判断方式
                 if (appPreference.UserName == string.Empty)
                 {
-                    ShowLoginDialog();
+
+                    Dialogs.ShowLoginDialog(Root.XamlRoot, (s, args) =>
+                    {
+                        using (var scope = App.Current.Services.CreateScope())
+                        {
+                            var appPreference = scope.ServiceProvider.GetService<AppPreference>();
+                            (appPreference.UserName, appPreference.Password) = (s.Content as LoginPage).GetBoxInfo();
+                            _ = appPreference.SaveAsync(scope.ServiceProvider.GetService<AppDbContext>());
+                        }
+                    });
                 }
             }
 
@@ -41,27 +52,6 @@ namespace OhMyWhut.Win
             navOptions = new FrameNavigationOptions();
             navOptions.IsNavigationStackEnabled = false;
             NavigationViewControl.SelectedItem = HomeNavItem;
-        }
-
-        private void ShowLoginDialog()
-        {
-            ContentDialog dialog = new ContentDialog();
-            dialog.XamlRoot = root.XamlRoot;
-            dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
-            dialog.PrimaryButtonText = "登录";
-            dialog.CloseButtonText = "取消";
-            dialog.DefaultButton = ContentDialogButton.Primary;
-            dialog.Content = new LoginPage();
-            dialog.PrimaryButtonClick += (s, args) =>
-            {
-                using (var scope = App.Current.Services.CreateScope())
-                {
-                    var appPreference = scope.ServiceProvider.GetService<AppPreference>();
-                    (appPreference.UserName, appPreference.Password) = (s.Content as LoginPage).GetBoxInfo();
-                    _ = appPreference.SaveAsync(scope.ServiceProvider.GetService<AppDbContext>());
-                }
-            };
-            _ = dialog.ShowAsync();
         }
 
         public string AppTitleText
