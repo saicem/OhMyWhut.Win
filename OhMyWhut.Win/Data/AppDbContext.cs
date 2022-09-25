@@ -72,7 +72,6 @@ namespace OhMyWhut.Win.Data
             {
                 eb.HasKey(x => x.Id);
                 eb.HasIndex(x => x.Type);
-                eb.Property(x => x.CreatedAt).HasDefaultValueSql("datetime()");
             });
 
             base.OnModelCreating(builder);
