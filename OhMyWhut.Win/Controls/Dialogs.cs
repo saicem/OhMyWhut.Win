@@ -4,12 +4,14 @@ using OhMyWhut.Win.Pages;
 using Microsoft.Extensions.DependencyInjection;
 using OhMyWhut.Win.Data;
 using OhMyWhut.Win.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace OhMyWhut.Win.Controls
 {
     internal class Dialogs
     {
-        internal static void ShowLoginDialog(XamlRoot root)
+        internal static async Task ShowLoginDialogAsync(XamlRoot root)
         {
             ContentDialog dialog = new ContentDialog();
             dialog.XamlRoot = root;
@@ -27,7 +29,7 @@ namespace OhMyWhut.Win.Controls
                     _ = appPreference.SaveAsync(scope.ServiceProvider.GetService<AppDbContext>());
                 }
             };
-            _ = dialog.ShowAsync();
+            await dialog.ShowAsync();
         }
     }
 }

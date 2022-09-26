@@ -44,7 +44,7 @@ namespace OhMyWhut.Win
                 // TODO 更优雅的判断方式
                 if (appPreference.UserName == string.Empty)
                 {
-                    Dialogs.ShowLoginDialog(Root.XamlRoot);
+                    _ = Dialogs.ShowLoginDialogAsync(RootGrid.XamlRoot);
                 }
                 else
                 {
@@ -108,6 +108,11 @@ namespace OhMyWhut.Win
             {
                 throw new Exception("未处理的导航选项");
             }
+        }
+
+        private void PersonProfile_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            _ = Dialogs.ShowLoginDialogAsync(RootGrid.XamlRoot);
         }
     }
 }

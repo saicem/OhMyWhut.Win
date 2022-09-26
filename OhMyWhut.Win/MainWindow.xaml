@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d">
-    <Grid x:Name="Root">
+    <Grid x:Name="RootGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="*" />
@@ -19,7 +19,8 @@
             <PersonPicture x:Name="PersonProfile"
                            Initials="ABC"
                            Height="32"
-                           Width="32" />
+                           Width="32"
+                           Tapped="PersonProfile_Tapped" />
             <Border x:Name="TitleBar"
                     Grid.Column="1"
                     IsHitTestVisible="True"

@@ -17,6 +17,8 @@ namespace OhMyWhut.Win.Services
 
         public string FactoryCode { get; set; } = string.Empty;
 
+        public string Dormitory { get; set; } = string.Empty;
+
         public TimeSpan QuerySpanCourses { get; set; } = TimeSpan.FromDays(7);
 
         public TimeSpan QuerySpanElectricFee { get; set; } = TimeSpan.FromHours(6);
