@@ -23,5 +23,16 @@ namespace OhMyWhut.Win.Data
         public int StartSec { get; set; }
 
         public int EndSec { get; set; }
+
+        [NotMapped]
+        public int BigSec => StartSec switch
+        {
+            1 => 1,
+            3 => 2,
+            6 => 3,
+            9 => 4,
+            11 => 5,
+            _ => throw new Exception("课程节数异常"),
+        };
     }
 }

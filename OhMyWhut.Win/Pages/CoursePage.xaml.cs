@@ -10,6 +10,8 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using OhMyWhut.Win.Controls;
+using OhMyWhut.Win.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -26,6 +28,25 @@ namespace OhMyWhut.Win.Pages
         public CoursePage()
         {
             InitializeComponent();
+            Loaded += CoursePage_Loaded;
         }
+
+        private void CoursePage_Loaded(object sender, RoutedEventArgs e)
+        {
+            var courses = ViewModel.CourseViewModel.CourseList;
+            foreach (var course in courses)
+            {
+                var courseBox = new CourseBox(course);
+                Grid.SetRow(courseBox, course.BigSec);
+                Grid.SetColumn(courseBox, course.DayOfWeek switch
+                {
+                    0 => 6,
+                    _ => (int)course.DayOfWeek - 1
+                });
+                CourseGrid.Children.Add(courseBox);
+            }
+        }
+
+        public MainViewModel ViewModel => App.ViewModel;
     }
 }

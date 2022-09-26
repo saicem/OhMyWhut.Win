@@ -2,56 +2,59 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:OhMyWhut.Win.Pages"
+      xmlns:data="using:OhMyWhut.Win.Data"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="3*" />
-            <RowDefinition Height="3*" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="3*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Viewbox Grid.Row="0"
-                 Grid.Column="0">
-            <TextBlock Text="周一" />
-        </Viewbox>
-        <Viewbox Grid.Row="0"
-                 Grid.Column="1">
-            <TextBlock Text="周二" />
-        </Viewbox>
-        <Viewbox Grid.Row="0"
-                 Grid.Column="2">
-            <TextBlock Text="周三" />
-        </Viewbox>
-        <Viewbox Grid.Row="0"
-                 Grid.Column="3">
-            <TextBlock Text="周四" />
-        </Viewbox>
-        <Viewbox Grid.Row="0"
-                 Grid.Column="4">
-            <TextBlock Text="周五" />
-        </Viewbox>
-        <Viewbox Grid.Row="0"
-                 Grid.Column="5">
-            <TextBlock Text="周六" />
-        </Viewbox>
-        <Viewbox Grid.Row="0"
-                 Grid.Column="6">
-            <TextBlock Text="周日" />
-        </Viewbox>
+        <Grid x:Name="CourseGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="3*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Viewbox Grid.Row="0"
+                     Grid.Column="0">
+                <TextBlock Text="周一" />
+            </Viewbox>
+            <Viewbox Grid.Row="0"
+                     Grid.Column="1">
+                <TextBlock Text="周二" />
+            </Viewbox>
+            <Viewbox Grid.Row="0"
+                     Grid.Column="2">
+                <TextBlock Text="周三" />
+            </Viewbox>
+            <Viewbox Grid.Row="0"
+                     Grid.Column="3">
+                <TextBlock Text="周四" />
+            </Viewbox>
+            <Viewbox Grid.Row="0"
+                     Grid.Column="4">
+                <TextBlock Text="周五" />
+            </Viewbox>
+            <Viewbox Grid.Row="0"
+                     Grid.Column="5">
+                <TextBlock Text="周六" />
+            </Viewbox>
+            <Viewbox Grid.Row="0"
+                     Grid.Column="6">
+                <TextBlock Text="周日" />
+            </Viewbox>
+        </Grid>
     </Grid>
 </Page>

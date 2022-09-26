@@ -13,13 +13,13 @@
                 VerticalAlignment="Top"
                 Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
                 Canvas.ZIndex="1">
-            <TextBlock x:Name="AppTitle"
-                       Text="{x:Bind AppTitleText}"
-                       VerticalAlignment="Top"
-                       Margin="0,15,0,0"
-                       Style="{StaticResource CaptionTextBlockStyle}" />
+                <TextBlock x:Name="AppTitle"
+                           Text="{x:Bind AppTitleText}"
+                           VerticalAlignment="Top"
+                           Margin="0,15,0,0"
+                           Style="{StaticResource CaptionTextBlockStyle}" />
         </Border>
-
+        
         <NavigationView x:Name="NavigationViewControl"
                         IsTabStop="False"
                         IsTitleBarAutoPaddingEnabled="False"
