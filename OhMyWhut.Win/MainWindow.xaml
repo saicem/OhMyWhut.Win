@@ -5,51 +5,75 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d">
-    <Grid x:Name="Root"
-          Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid x:Name="Root">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <Border x:Name="AppTitleBar"
-                IsHitTestVisible="True"
-                VerticalAlignment="Top"
-                Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
-                Canvas.ZIndex="1">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="56" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <PersonPicture x:Name="PersonProfile"
+                           Initials="ABC"
+                           Height="32"
+                           Width="32" />
+            <Border x:Name="TitleBar"
+                    Grid.Column="1"
+                    IsHitTestVisible="True"
+                    VerticalAlignment="Top"
+                    Height="40"
+                    Canvas.ZIndex="1">
                 <TextBlock x:Name="AppTitle"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
                            Text="{x:Bind AppTitleText}"
-                           VerticalAlignment="Top"
-                           Margin="0,15,0,0"
                            Style="{StaticResource CaptionTextBlockStyle}" />
-        </Border>
-        
-        <NavigationView x:Name="NavigationViewControl"
-                        IsTabStop="False"
-                        IsTitleBarAutoPaddingEnabled="False"
-                        IsBackButtonVisible="Collapsed"
-                        PaneOpening="NavigationViewControl_PaneOpening"
-                        PaneClosing="NavigationViewControl_PaneClosing"
-                        DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
-                        SelectionChanged="OnNavViewItemSelectionChanged">
-            <NavigationView.MenuItems>
-                <NavigationViewItem  x:Name="HomeNavItem"
-                                     Icon="Home"
-                                     Content="主页"
-                                     Tag="HomePage" />
-                <NavigationViewItem Icon="Tag"
-                                    Content="课表"
-                                    Tag="CoursePage" />
-                <NavigationViewItem Icon="Library"
-                                    Content="图书"
-                                    Tag="BookPage" />
-                <NavigationViewItem Icon="Shop"
-                                    Content="电费"
-                                    Tag="ElectricPage" />
-            </NavigationView.MenuItems>
-            <NavigationView.FooterMenuItems>
-                <NavigationViewItem Icon="Contact"
-                                    Content="我"
-                                    Tag="UserPage" />
-            </NavigationView.FooterMenuItems>
-            <Frame x:Name="rootFrame"
-                   Margin="0,48,0,0" />
-        </NavigationView>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="HorizontalAlignment"
+                            Value="Center" />
+                    <Setter Property="Margin"
+                            Value="0,5" />
+                    <Setter Property="BorderBrush"
+                            Value="#fff" />
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="56" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <Button x:Name="HomeButton"
+                        Tapped="NavigationTap">
+                    <SymbolIcon Symbol="Home" />
+                </Button>
+                <Button x:Name="CourseButton"
+                        Tapped="NavigationTap">
+                    <SymbolIcon Symbol="Tag" />
+                </Button>
+                <Button x:Name="BookButton"
+                        Tapped="NavigationTap">
+                    <SymbolIcon Symbol="Library" />
+                </Button>
+                <Button x:Name="ElectricFeeButton"
+                        Tapped="NavigationTap">
+                    <SymbolIcon Symbol="Shop" />
+                </Button>
+            </StackPanel>
+            <Border Grid.Column="1"
+                    Padding="5"
+                    BorderBrush="#000"
+                    BorderThickness="2"
+                    CornerRadius="8">
+                <Frame x:Name="RootFrame" />
+            </Border>
+        </Grid>
     </Grid>
 </Window>

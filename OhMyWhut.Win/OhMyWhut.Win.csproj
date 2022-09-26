@@ -24,7 +24,6 @@
     <None Remove="Pages\ElectricPage.xaml" />
     <None Remove="Pages\HomePage.xaml" />
     <None Remove="Pages\LoginPage.xaml" />
-    <None Remove="Pages\UserPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -105,11 +104,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\CourseBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\UserPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
