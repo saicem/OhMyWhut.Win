@@ -4,28 +4,45 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:OhMyWhut.Win.Pages"
     xmlns:vm="using:OhMyWhut.Win.ViewModels"
+    xmlns:ctWinUI="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:data="using:OhMyWhut.Win.Data"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Page.Resources>
-        <DataTemplate x:Key="BookListViewTemplate"
-                      x:DataType="data:Book">
-            <Grid>
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{x:Bind Name}" />
-                    <TextBlock Text="{x:Bind BorrowDate}" />
-                    <TextBlock Text="{x:Bind ExpireDate}" />
-                </StackPanel>
-            </Grid>
-
-        </DataTemplate>
-    </Page.Resources>
     <Grid>
-        <ListView x:Name="BookListView"
-                  SelectionMode="Single"
-                  ItemsSource="{x:Bind ViewModel.BookViewModel.BookList, Mode=TwoWay}"
-                  ItemTemplate="{StaticResource BookListViewTemplate}" />
+        <Grid.Resources>
+            <DataTemplate x:Key="BookListViewTemplate"
+                          x:DataType="data:Book">
+                <Grid>
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="{x:Bind Name}" />
+                        <TextBlock Text="{x:Bind BorrowDate}" />
+                        <TextBlock Text="{x:Bind ExpireDate}" />
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+        </Grid.Resources>
+        <ctWinUI:DataGrid x:Name="DataGrid"
+                          AutoGenerateColumns="False"
+                          SelectionMode="Single"
+                          IsReadOnly="True"
+                          ItemsSource="{x:Bind ViewModel.BookViewModel.BookList, Mode=OneTime}">
+            <ctWinUI:DataGrid.Resources>
+                <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush">Transparent</SolidColorBrush>
+                <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush">Transparent</SolidColorBrush>
+            </ctWinUI:DataGrid.Resources>
+            <ctWinUI:DataGrid.Columns>
+                <ctWinUI:DataGridTextColumn Header="书名"
+                                            Binding="{Binding Name}"
+                                            Tag="Name" />
+                <ctWinUI:DataGridTextColumn Header="借阅时间"
+                                            Binding="{Binding BorrowDate}"
+                                            Tag="BorrowDate" />
+                <ctWinUI:DataGridTextColumn Header="到期时间"
+                                            Binding="{Binding ExpireDate}"
+                                            Tag="ExpireDate" />
+            </ctWinUI:DataGrid.Columns>
+        </ctWinUI:DataGrid>
     </Grid>
 </Page>
