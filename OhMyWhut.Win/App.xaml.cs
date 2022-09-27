@@ -25,6 +25,8 @@ namespace OhMyWhut.Win
 
         public static AppPreference Preference { get; } = new AppPreference();
 
+        public static MainWindow MainWindow { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -60,8 +62,8 @@ namespace OhMyWhut.Win
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            m_window = new MainWindow();
-            m_window.Activate();
+            MainWindow = new MainWindow();
+            MainWindow.Activate();
         }
 
         private static IServiceProvider ConfigureServices()
@@ -74,7 +76,5 @@ namespace OhMyWhut.Win
 
             return services.BuildServiceProvider();
         }
-
-        private Window m_window;
     }
 }

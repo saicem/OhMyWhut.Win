@@ -104,7 +104,7 @@ namespace OhMyWhut.Win
 
         private Type curNavigatedType = null;
 
-        private void NavigateTo(Type type)
+        public void NavigateTo(Type type)
         {
             if (type == curNavigatedType)
             {
@@ -113,6 +113,7 @@ namespace OhMyWhut.Win
             curNavigatedType = type;
             RootFrame.NavigateToType(type, null, navOptions);
         }
+
         private void PersonProfile_Tapped(object sender, TappedRoutedEventArgs e)
         {
             NavigateTo(typeof(LoginPage));

@@ -74,7 +74,6 @@ namespace OhMyWhut.Win.Data
                 eb.HasKey(x => x.Id);
                 eb.Property(x => x.Unit).HasMaxLength(4).IsFixedLength(true);
                 eb.Property(x => x.RemainName).HasMaxLength(4).IsFixedLength(true);
-                eb.Property(x => x.CreatedAt).ValueGeneratedOnAdd();
             });
 
             builder.Entity<Log>(eb =>

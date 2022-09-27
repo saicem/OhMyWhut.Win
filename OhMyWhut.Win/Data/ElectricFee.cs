@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security;
 
 namespace OhMyWhut.Win.Data
 {
@@ -8,7 +9,7 @@ namespace OhMyWhut.Win.Data
     {
         public int Id { get; set; }
 
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
 
         public float RemainPower { get; set; }
 
@@ -19,5 +20,11 @@ namespace OhMyWhut.Win.Data
         public string Unit { get; set; }
 
         public float MeterOverdue { get; set; }
+
+        [NotMapped]
+        public string Surplus { get => RemainPower.ToString() + RemainName; }
+
+        [NotMapped]
+        public string Total { get => TotalValue.ToString() + Unit; }
     }
 }

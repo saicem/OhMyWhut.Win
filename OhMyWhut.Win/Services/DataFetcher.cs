@@ -154,15 +154,15 @@ namespace OhMyWhut.Win.Services
             CheckUserInfo();
             CheckMeterInfo();
             var fee = await _gluttony.GetElectricFeeAsync();
-            _db.ElectricFees.Add(new ElectricFee
+            await _db.ElectricFees.AddAsync(new ElectricFee
             {
                 RemainName = fee.RemainName,
-                RemainPower = fee.RemainPower,
-                MeterOverdue = fee.MeterOverdue,
-                TotalValue = fee.TotalValue,
+                RemainPower = float.Parse(fee.RemainPower),
+                MeterOverdue = float.Parse(fee.MeterOverdue),
+                TotalValue = float.Parse(fee.TotalValue),
                 Unit = fee.Unit
             });
-            await _db.Logs.AddAsync(new Log(LogType.FetchCourses, "success"));
+            await _db.Logs.AddAsync(new Log(LogType.FetchElectricFee, "success"));
             await _db.SaveChangesAsync();
         }
 

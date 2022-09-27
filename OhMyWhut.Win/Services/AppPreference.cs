@@ -18,6 +18,8 @@ namespace OhMyWhut.Win.Services
 
         public string RealName { get; set; } = string.Empty;
 
+        public string RoomId { get; set; } = string.Empty;
+
         public string MeterId { get; set; } = string.Empty;
 
         public string FactoryCode { get; set; } = string.Empty;

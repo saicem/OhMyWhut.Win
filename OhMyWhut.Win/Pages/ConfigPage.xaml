@@ -9,7 +9,27 @@
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Margin"
+                            Value="4" />
+                </Style>
+            </StackPanel.Resources>
+            <TextBlock Text="{x:Bind Preference.Dormitory}" />
+            <TextBlock Text="{x:Bind Preference.FactoryCode}" />
+            <TextBlock Text="{x:Bind Preference.RoomId}" />
+            <TextBlock Text="{x:Bind Preference.MeterId}" />
+            <Button x:Name="ResetMeterButton"
+                    Content="重新获取电表信息"
+                    Click="ResetMeterButton_Click" />
+        </StackPanel>
         <ctWinUI:DataGrid x:Name="DataGrid"
+                          Grid.Row="1"
                           AutoGenerateColumns="True"
                           SelectionMode="Single"
                           IsReadOnly="True"

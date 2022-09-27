@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using OhMyWhut.Win.Services;
 using OhMyWhut.Win.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -30,5 +31,12 @@ namespace OhMyWhut.Win.Pages
         }
 
         public MainViewModel ViewModel => App.ViewModel;
+
+        public AppPreference Preference => App.Preference;
+
+        private void ResetMeterButton_Click(object sender, RoutedEventArgs e)
+        {
+            App.MainWindow.NavigateTo(typeof(CwsfWebViewPage));
+        }
     }
 }

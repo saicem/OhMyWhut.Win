@@ -36,22 +36,37 @@ namespace OhMyWhut.Win.Pages
 
         private async Task GetElectricDataAsync()
         {
-            var data = await CwsfWebView.ExecuteScriptAsync(
+            await CwsfWebView.ExecuteScriptAsync(
                 """
                 data = {};
                 data.factoryCode = $('#factorycode').val();
-                data.meterId = $('#roomid').find('option:selected').val();
+                data.roomId = $('#roomid').find('option:selected').val();
                 data.dormitory = $('#roomid').find('option:selected').text();
-                data
+                fetch("http://cwsf.whut.edu.cn/queryRoomElec", {
+                  "headers": {
+                    "accept": "application/json, text/javascript, */*; q=0.01",
+                    "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "proxy-connection": "keep-alive",
+                    "x-requested-with": "XMLHttpRequest",
+                    "Referrer-Policy": "strict-origin-when-cross-origin"
+                  },
+                  "body": `roomid=${data.roomId}&factorycode=${data.factoryCode}`,
+                  "method": "POST"
+                }).then(res => res.json()).then(json => data.meterId = json.meterId);
                 """);
+            // TODO 优雅的解决这个异步获取
+            await Task.Delay(1000);
+            var data = await CwsfWebView.ExecuteScriptAsync("data");
             var doc = JsonDocument.Parse(data);
             using (var scope = App.Current.Services.CreateScope())
             {
                 var preference = App.Preference;
                 var db = scope.ServiceProvider.GetService<AppDbContext>();
                 preference.FactoryCode = doc.RootElement.GetProperty("factoryCode").GetString();
-                preference.MeterId = doc.RootElement.GetProperty("meterId").GetString();
+                preference.RoomId = doc.RootElement.GetProperty("roomId").GetString();
                 preference.Dormitory = doc.RootElement.GetProperty("dormitory").GetString();
+                preference.MeterId = doc.RootElement.GetProperty("meterId").GetString();
                 // todo 显示弹窗 让用户确认 + 尝试一次请求来验证获取的信息是否正确
                 await preference.SaveAsync(db);
             }
