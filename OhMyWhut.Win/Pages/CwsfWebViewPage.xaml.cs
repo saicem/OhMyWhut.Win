@@ -27,23 +27,23 @@ namespace OhMyWhut.Win.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ElectricPage : Page
+    public sealed partial class CwsfWebViewPage : Page
     {
-        public ElectricPage()
+        public CwsfWebViewPage()
         {
             InitializeComponent();
         }
 
-
-
         private async Task GetElectricDataAsync()
         {
             var data = await CwsfWebView.ExecuteScriptAsync(
-                "data = {};" +
-                "data.factoryCode = $('#factorycode').val();" +
-                "data.meterId = $('#roomid').find('option:selected').val();" +
-                "data.dormitory = $('#roomid').find('option:selected').text();" +
-                "data");
+                """
+                data = {};
+                data.factoryCode = $('#factorycode').val();
+                data.meterId = $('#roomid').find('option:selected').val();
+                data.dormitory = $('#roomid').find('option:selected').text();
+                data
+                """);
             var doc = JsonDocument.Parse(data);
             using (var scope = App.Current.Services.CreateScope())
             {

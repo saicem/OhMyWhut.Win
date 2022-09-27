@@ -17,11 +17,11 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\CourseBox.xaml" />
-    <None Remove="OhMyWhut\app.db" />
     <None Remove="Pages\BookPage.xaml" />
     <None Remove="Pages\ConfigPage.xaml" />
     <None Remove="Pages\CoursePage.xaml" />
-    <None Remove="Pages\ElectricPage.xaml" />
+    <None Remove="Pages\CwsfWebViewPage.xaml" />
+    <None Remove="Pages\ElectricFeePage.xaml" />
     <None Remove="Pages\HomePage.xaml" />
     <None Remove="Pages\LoginPage.xaml" />
   </ItemGroup>
@@ -34,12 +34,6 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="OhMyWhut\app.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
   </ItemGroup>
 
 	<ItemGroup>
@@ -70,7 +64,7 @@
     <ProjectReference Include="..\OhMyWhut.Engine\OhMyWhut.Engine.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\ElectricPage.xaml">
+    <Page Update="Pages\CwsfWebViewPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -103,6 +97,16 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="OhMyWhut\app.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\ElectricFeePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Controls\CourseBox.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -115,5 +119,11 @@
   -->
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 </Project>

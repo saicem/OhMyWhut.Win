@@ -25,52 +25,23 @@ namespace OhMyWhut.Win
 
         public MainWindow()
         {
-            PrepareData();
             InitializeComponent();
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(TitleBar);
 
-            navOptions = new FrameNavigationOptions();
-            navOptions.IsNavigationStackEnabled = false;
-        }
-
-        private void PrepareData()
-        {
             using (var scope = App.Current.Services.CreateScope())
             {
                 var appPreference = scope.ServiceProvider.GetService<AppPreference>();
-                var gluttony = scope.ServiceProvider.GetService<Gluttony>();
-                appPreference.LoadFromDatabaseAsync(scope.ServiceProvider.GetService<AppDbContext>()).Wait();
-                // TODO 更优雅的判断方式
-                if (appPreference.UserName == string.Empty)
+                var db = scope.ServiceProvider.GetService<AppDbContext>();
+                appPreference.LoadFromDatabaseAsync(db).Wait();
+                if (!appPreference.IsSetUserInfo)
                 {
                     _ = Dialogs.ShowLoginDialogAsync(RootGrid.XamlRoot);
                 }
-                else
-                {
-                    gluttony.SetUserInfo(appPreference.UserName, appPreference.Password);
-                    _ = Task.Run(() =>
-                    {
-                        using (var scope = App.Current.Services.CreateScope())
-                        {
-                            var fetcher = scope.ServiceProvider.GetService<DataFetcher>();
-                            fetcher.UpdateCoursesAsync().Wait();
-                            fetcher.UpdateBooksAsync().Wait();
-                        }
-                    });
-                }
-                if (appPreference.MeterId != string.Empty)
-                {
-                    _ = Task.Run(() =>
-                    {
-                        using (var scope = App.Current.Services.CreateScope())
-                        {
-                            var fetcher = scope.ServiceProvider.GetService<DataFetcher>();
-                            fetcher.UpdateElectricFeeAsync().Wait();
-                        }
-                    });
-                }
             }
+
+            navOptions = new FrameNavigationOptions();
+            navOptions.IsNavigationStackEnabled = false;
         }
 
         public string AppTitleText
@@ -102,7 +73,15 @@ namespace OhMyWhut.Win
             }
             else if (name == "ElectricFeeButton")
             {
-                RootFrame.NavigateToType(typeof(ElectricPage), null, navOptions);
+                var preference = App.Current.Services.GetService<AppPreference>();
+                if (preference.IsSetMeterInfo)
+                {
+                    RootFrame.NavigateToType(typeof(ElectricFeePage), null, navOptions);
+                }
+                else
+                {
+                    RootFrame.NavigateToType(typeof(CwsfWebViewPage), null, navOptions);
+                }
             }
             else
             {

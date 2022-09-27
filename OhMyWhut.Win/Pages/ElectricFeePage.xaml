@@ -1,34 +1,36 @@
 ﻿<Page
-    x:Class="OhMyWhut.Win.Pages.BookPage"
+    x:Class="OhMyWhut.Win.Pages.ElectricFeePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:OhMyWhut.Win.Pages"
-    xmlns:vm="using:OhMyWhut.Win.ViewModels"
     xmlns:ctWinUI="using:CommunityToolkit.WinUI.UI.Controls"
-    xmlns:data="using:OhMyWhut.Win.Data"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
     <Grid>
         <ctWinUI:DataGrid x:Name="DataGrid"
-                          AutoGenerateColumns="False"
+                          AutoGenerateColumns="True"
                           SelectionMode="Single"
                           IsReadOnly="True"
-                          ItemsSource="{x:Bind ViewModel.BookViewModel.BookList, Mode=OneWay}">
+                          ItemsSource="{x:Bind ViewModel.ElectricFeeViewModel.ElectricFeeList, Mode=OneWay}">
             <ctWinUI:DataGrid.Resources>
                 <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush">Transparent</SolidColorBrush>
                 <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush">Transparent</SolidColorBrush>
             </ctWinUI:DataGrid.Resources>
             <ctWinUI:DataGrid.Columns>
-                <ctWinUI:DataGridTextColumn Header="书名"
-                                            Binding="{Binding Name}"
+                <ctWinUI:DataGridTextColumn Header="当前电费"
+                                            Binding="{Binding RemainPower}"
                                             Tag="Name" />
-                <ctWinUI:DataGridTextColumn Header="借阅时间"
-                                            Binding="{Binding BorrowDate}"
+                <ctWinUI:DataGridTextColumn Header="单位"
+                                            Binding="{Binding RemainName}"
                                             Tag="BorrowDate" />
-                <ctWinUI:DataGridTextColumn Header="到期时间"
-                                            Binding="{Binding ExpireDate}"
+                <ctWinUI:DataGridTextColumn Header="总电费"
+                                            Binding="{Binding TotalValue}"
+                                            Tag="ExpireDate" />
+                <ctWinUI:DataGridTextColumn Header="单位"
+                                            Binding="{Binding Unit}"
                                             Tag="ExpireDate" />
             </ctWinUI:DataGrid.Columns>
         </ctWinUI:DataGrid>

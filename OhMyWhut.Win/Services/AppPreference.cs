@@ -8,9 +8,9 @@ namespace OhMyWhut.Win.Services
 {
     public class AppPreference
     {
-        public bool IsSetUserInfo { get => UserName != string.Empty; }
+        public bool IsSetUserInfo { get => UserName != string.Empty && Password != string.Empty; }
         
-        public bool IsSetMeterInfo { get => MeterId != string.Empty; }
+        public bool IsSetMeterInfo { get => MeterId != string.Empty && FactoryCode != string.Empty; }
 
         public string UserName { get; set; } = string.Empty;
 
