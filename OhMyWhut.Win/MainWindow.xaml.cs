@@ -44,7 +44,7 @@ namespace OhMyWhut.Win
                 await appPreference.LoadFromDatabaseAsync(db);
                 if (!appPreference.IsSetUserInfo)
                 {
-                    RootFrame.NavigateToType(typeof(LoginPage),null,navOptions);
+                    NavigateTo(typeof(LoginPage));
                 }
             }
         }
@@ -112,7 +112,7 @@ namespace OhMyWhut.Win
         }
         private void PersonProfile_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            RootFrame.NavigateToType(typeof(LoginPage), null, navOptions);
+            NavigateTo(typeof(LoginPage));
         }
     }
 }
