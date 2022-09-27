@@ -4,46 +4,75 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Toolkit.Uwp.Notifications;
 using OhMyWhut.Engine;
-using OhMyWhut.Engine.Exceptions;
 using OhMyWhut.Win.Data;
-using Windows.UI.Notifications;
 
 namespace OhMyWhut.Win.Services
 {
     public class DataFetcher
     {
         private readonly Gluttony _gluttony;
-        private readonly AppPreference _preference;
         private readonly AppDbContext _db;
         private readonly Logger _logger;
 
-        public DataFetcher(Gluttony gluttony, AppPreference preference, AppDbContext db, Logger logger)
+        public DataFetcher(Gluttony gluttony, AppDbContext db, Logger logger)
         {
             _db = db;
             _logger = logger;
             _gluttony = gluttony;
-            _preference = preference;
         }
 
-        public async Task<DataFetcher> LoginAsync()
+        public void CheckUserInfo()
         {
-            try
+            if (_gluttony.HasSetUserInfo)
             {
-                await _gluttony.LoginAsync();
-                ToastNotificationManager.CreateToastNotifier()
-                    .Show(new ToastNotification(new ToastContentBuilder().AddText("登录成功").GetToastContent().GetXml()));
-                _ = _logger.AddLogAsync(LogType.Login, "success");
+                return;
             }
-            catch (RequestFailedException ex)
+            var preference = App.Preference;
+            if (preference.IsSetUserInfo)
             {
-                ToastNotificationManager.CreateToastNotifier()
-                    .Show(new ToastNotification(new ToastContentBuilder().AddText(ex.Message).GetToastContent().GetXml()));
-                _ = _logger.AddLogAsync(LogType.Login, "fail");
+                _gluttony.SetUserInfo(preference.UserName, preference.Password);
             }
-            return this;
+            else
+            {
+                throw new Exception("未设置用户信息");
+            }
         }
+
+        public void CheckMeterInfo()
+        {
+            if (_gluttony.HasSetElectricMeter)
+            {
+                return;
+            }
+            var preference = App.Preference;
+            if (preference.IsSetMeterInfo)
+            {
+                _gluttony.SetMeter(preference.MeterId, preference.FactoryCode);
+            }
+            else
+            {
+                throw new Exception("未设置电表信息");
+            }
+        }
+
+        //public async Task<DataFetcher> LoginAsync()
+        //{
+        //    try
+        //    {
+        //        await _gluttony.LoginAsync();
+        //        ToastNotificationManager.CreateToastNotifier()
+        //            .Show(new ToastNotification(new ToastContentBuilder().AddText("登录成功").GetToastContent().GetXml()));
+        //        _ = _logger.AddLogAsync(LogType.Login, "success");
+        //    }
+        //    catch (RequestFailedException ex)
+        //    {
+        //        ToastNotificationManager.CreateToastNotifier()
+        //            .Show(new ToastNotification(new ToastContentBuilder().AddText(ex.Message).GetToastContent().GetXml()));
+        //        _ = _logger.AddLogAsync(LogType.Login, "fail");
+        //    }
+        //    return this;
+        //}
 
         public async Task<ICollection<MyCourse>> GetCoursesAsync()
         {
@@ -53,10 +82,12 @@ namespace OhMyWhut.Win.Services
 
         public async Task UpdateCoursesAsync()
         {
-            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchCourses) <= _preference.QuerySpanCourses)
+            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchCourses)
+                <= App.Preference.QuerySpanCourses)
             {
                 return;
             }
+            CheckUserInfo();
             var courses = await _gluttony.GetMyCoursesAsync().ConfigureAwait(false);
             var myCourseBag = new ConcurrentBag<MyCourse>();
             Parallel.ForEach(courses, course =>
@@ -76,7 +107,7 @@ namespace OhMyWhut.Win.Services
             await _db.Database.ExecuteSqlRawAsync($"DELETE FROM {nameof(MyCourse)}");
             await _db.MyCourses.AddRangeAsync(myCourseBag);
             await _db.Logs.AddAsync(new Log(LogType.FetchCourses, "success"));
-            _ = _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
         }
 
         public async Task<ICollection<Book>> GetBooksAsync()
@@ -87,10 +118,12 @@ namespace OhMyWhut.Win.Services
 
         public async Task UpdateBooksAsync()
         {
-            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchBooks) <= _preference.QuerySpanBooks)
+            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchBooks)
+                <= App.Preference.QuerySpanBooks)
             {
                 return;
             }
+            CheckUserInfo();
             var books = await _gluttony.GetBooksAsync();
             var bookBag = from book in books
                           select new Book
@@ -113,10 +146,13 @@ namespace OhMyWhut.Win.Services
 
         public async Task UpdateElectricFeeAsync()
         {
-            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchElectricFee) <= _preference.QuerySpanElectricFee)
+            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchElectricFee)
+                <= App.Preference.QuerySpanElectricFee)
             {
                 return;
             }
+            CheckUserInfo();
+            CheckMeterInfo();
             var fee = await _gluttony.GetElectricFeeAsync();
             _db.ElectricFees.Add(new ElectricFee
             {
@@ -127,7 +163,7 @@ namespace OhMyWhut.Win.Services
                 Unit = fee.Unit
             });
             await _db.Logs.AddAsync(new Log(LogType.FetchCourses, "success"));
-            _ = _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
         }
 
         //private async Task<string> FetchUserNameAsync()

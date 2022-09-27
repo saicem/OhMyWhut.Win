@@ -11,7 +11,7 @@
 
     <Grid>
         <ctWinUI:DataGrid x:Name="DataGrid"
-                          AutoGenerateColumns="True"
+                          AutoGenerateColumns="False"
                           SelectionMode="Single"
                           IsReadOnly="True"
                           ItemsSource="{x:Bind ViewModel.ElectricFeeViewModel.ElectricFeeList, Mode=OneWay}">

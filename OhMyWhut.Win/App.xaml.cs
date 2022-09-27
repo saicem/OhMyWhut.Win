@@ -22,6 +22,9 @@ namespace OhMyWhut.Win
         public static readonly string DataFolder = Path.Join(Directory.GetParent(Environment.ProcessPath).FullName, "OhMyWhut");
 
         public static MainViewModel ViewModel { get; } = new MainViewModel();
+
+        public static AppPreference Preference { get; } = new AppPreference();
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().

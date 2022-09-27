@@ -30,26 +30,6 @@ namespace OhMyWhut.Win.Services
 
         public TimeSpan QuerySpanBooks { get; set; } = TimeSpan.FromDays(1);
 
-        private static AppPreference instance;
-
-        private static readonly object locker = new object();
-
-        private AppPreference()
-        {
-        }
-
-        public static AppPreference GetInstance()
-        {
-            lock (locker)
-            {
-                if (instance == null)
-                {
-                    instance = new AppPreference();
-                }
-            }
-            return instance;
-        }
-
         public async Task LoadFromDatabaseAsync(AppDbContext db)
         {
             await db.Preferences.AsNoTracking().ForEachAsync(p =>

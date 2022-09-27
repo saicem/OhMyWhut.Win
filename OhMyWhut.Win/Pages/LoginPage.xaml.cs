@@ -13,6 +13,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using OhMyWhut.Win.Data;
 using OhMyWhut.Win.Services;
+using OhMyWhut.Win.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -38,7 +39,7 @@ namespace OhMyWhut.Win.Pages
 
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            var preference = AppPreference.GetInstance();
+            var preference = App.Preference;
             (preference.UserName, preference.Password) = GetBoxInfo();
             using(var scope = App.Current.Services.CreateScope())
             {
@@ -46,5 +47,9 @@ namespace OhMyWhut.Win.Pages
                 await preference.SaveAsync(db);
             }
         }
+
+        public MainViewModel ViewModel { get => App.ViewModel; }
+
+        public AppPreference AppPreference { get => App.Preference; }
     }
 }

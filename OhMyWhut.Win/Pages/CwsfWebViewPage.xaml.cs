@@ -47,7 +47,7 @@ namespace OhMyWhut.Win.Pages
             var doc = JsonDocument.Parse(data);
             using (var scope = App.Current.Services.CreateScope())
             {
-                var preference = AppPreference.GetInstance();
+                var preference = App.Preference;
                 var db = scope.ServiceProvider.GetService<AppDbContext>();
                 preference.FactoryCode = doc.RootElement.GetProperty("factoryCode").GetString();
                 preference.MeterId = doc.RootElement.GetProperty("meterId").GetString();

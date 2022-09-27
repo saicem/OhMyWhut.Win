@@ -39,7 +39,7 @@ namespace OhMyWhut.Win
         {
             using (var scope = App.Current.Services.CreateScope())
             {
-                var appPreference = AppPreference.GetInstance();
+                var appPreference = App.Preference;
                 var db = scope.ServiceProvider.GetService<AppDbContext>();
                 await appPreference.LoadFromDatabaseAsync(db);
                 if (!appPreference.IsSetUserInfo)
@@ -63,7 +63,7 @@ namespace OhMyWhut.Win
 
         private void NavigationTap(object sender, TappedRoutedEventArgs e)
         {
-            if (!AppPreference.GetInstance().IsSetUserInfo)
+            if (!App.Preference.IsSetUserInfo)
             {
                 NavigateTo(typeof(LoginPage));
                 return;
@@ -83,8 +83,7 @@ namespace OhMyWhut.Win
             }
             else if (name == "ElectricFeeButton")
             {
-                var preference = AppPreference.GetInstance();
-                if (preference.IsSetMeterInfo)
+                if (App.Preference.IsSetMeterInfo)
                 {
                     NavigateTo(typeof(ElectricFeePage));
                 }
