@@ -7,5 +7,7 @@
         public CourseViewModel CourseViewModel { get; } = new CourseViewModel();
 
         public ElectricFeeViewModel ElectricFeeViewModel { get; } = new ElectricFeeViewModel();
+
+        public ConfigViewModel ConfigViewModel { get; } = new ConfigViewModel();
     }
 }

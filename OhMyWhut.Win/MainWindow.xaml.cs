@@ -93,6 +93,10 @@ namespace OhMyWhut.Win
                     NavigateTo(typeof(CwsfWebViewPage));
                 }
             }
+            else if (name == "ConfigButton")
+            {
+                NavigateTo(typeof(ConfigPage));
+            }
             else
             {
                 throw new Exception("未处理的导航选项");

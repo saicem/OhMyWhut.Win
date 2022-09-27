@@ -67,6 +67,11 @@
                         Tapped="NavigationTap">
                     <SymbolIcon Symbol="Shop" />
                 </Button>
+                <Button x:Name="ConfigButton"
+                        VerticalAlignment="Bottom"
+                        Tapped="NavigationTap">
+                    <SymbolIcon Symbol="Refresh" />
+                </Button>
             </StackPanel>
             <Border Grid.Column="1"
                     Padding="5"

@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using OhMyWhut.Win.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -27,5 +28,7 @@ namespace OhMyWhut.Win.Pages
         {
             InitializeComponent();
         }
+
+        public MainViewModel ViewModel => App.ViewModel;
     }
 }
