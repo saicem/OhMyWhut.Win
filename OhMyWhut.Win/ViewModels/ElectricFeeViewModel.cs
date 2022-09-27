@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OhMyWhut.Win.Data;
 using OhMyWhut.Win.Services;
+using Windows.System.Power.Diagnostics;
 
 namespace OhMyWhut.Win.ViewModels
 {
     public class ElectricFeeViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<ElectricFee> ElectricFeeList { get; private set; }
+        public ObservableCollection<ElectricFee> ElectricFeeList { get; }
+            = new ObservableCollection<ElectricFee>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -24,8 +26,12 @@ namespace OhMyWhut.Win.ViewModels
             using (var scope = App.Current.Services.CreateScope())
             {
                 var fetcher = scope.ServiceProvider.GetService<DataFetcher>();
-                var fee = await fetcher.GetElectricFeeAsync();
-                ElectricFeeList = new ObservableCollection<ElectricFee>(fee);
+                var fees = await fetcher.GetElectricFeeAsync();
+                ElectricFeeList.Clear();
+                foreach (var fee in fees)
+                {
+                    ElectricFeeList.Add(fee);
+                }
             }
         }
     }

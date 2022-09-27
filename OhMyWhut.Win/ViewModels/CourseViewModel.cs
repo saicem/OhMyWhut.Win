@@ -13,7 +13,8 @@ namespace OhMyWhut.Win.ViewModels
 {
     public class CourseViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<MyCourse> CourseList { get; private set; }
+        public ObservableCollection<MyCourse> CourseList { get; }
+            = new ObservableCollection<MyCourse>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -25,7 +26,11 @@ namespace OhMyWhut.Win.ViewModels
             {
                 var fetcher = scope.ServiceProvider.GetService<DataFetcher>();
                 var courses = await fetcher.GetCoursesAsync();
-                CourseList = new ObservableCollection<MyCourse>(courses);
+                CourseList.Clear();
+                foreach (var course in courses)
+                {
+                    CourseList.Add(course);
+                }
             }
         }
     }

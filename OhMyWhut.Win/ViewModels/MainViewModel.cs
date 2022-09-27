@@ -2,17 +2,10 @@
 {
     public class MainViewModel
     {
-        public BookViewModel BookViewModel { get; }
+        public BookViewModel BookViewModel { get; } = new BookViewModel();
 
-        public CourseViewModel CourseViewModel { get; }
+        public CourseViewModel CourseViewModel { get; } = new CourseViewModel();
 
-        public ElectricFeeViewModel ElectricFeeViewModel { get; }
-
-        public MainViewModel()
-        {
-            BookViewModel = new BookViewModel();
-            CourseViewModel = new CourseViewModel();
-            ElectricFeeViewModel = new ElectricFeeViewModel();
-        }
+        public ElectricFeeViewModel ElectricFeeViewModel { get; } = new ElectricFeeViewModel();
     }
 }

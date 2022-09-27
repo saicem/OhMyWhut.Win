@@ -9,12 +9,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using OhMyWhut.Win.Data;
 using OhMyWhut.Win.Services;
+using Windows.System.Power.Diagnostics;
 
 namespace OhMyWhut.Win.ViewModels
 {
     public class BookViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<Book> BookList { get; private set; }
+        public ObservableCollection<Book> BookList { get; }
+            = new ObservableCollection<Book>();
 
         //private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         public event PropertyChangedEventHandler PropertyChanged;
@@ -27,7 +29,11 @@ namespace OhMyWhut.Win.ViewModels
             {
                 var fetcher = scope.ServiceProvider.GetService<DataFetcher>();
                 var books = await fetcher.GetBooksAsync();
-                BookList = new ObservableCollection<Book>(books);
+                BookList.Clear();
+                foreach (var book in books)
+                {
+                    BookList.Add(book);
+                }
             }
         }
     }
