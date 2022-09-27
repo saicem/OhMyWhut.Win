@@ -32,16 +32,9 @@ namespace OhMyWhut.Win.Pages
         public ElectricPage()
         {
             InitializeComponent();
-            //http://cwsf.whut.edu.cn/slogin.html
-            //http://cwsf.whut.edu.cn/showPublic
-            CwsfWebView.NavigationStarting += CwsfWebView_NavigationStarting; ;
         }
 
-        private void CwsfWebView_NavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
-        {
-            string uri = args.Uri;
-            _ = GetElectricDataAsync();
-        }
+
 
         private async Task GetElectricDataAsync()
         {

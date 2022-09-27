@@ -12,12 +12,19 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Button Content="获取电表信息"
+        <Button x:Name="FetchMeterInfoButton"
+                Content="获取电表信息"
                 Click="Button_Click" />
         <WebView2 x:Name="CwsfWebView"
                   Grid.Row="1"
-                  Source="http://cwsf.whut.edu.cn/slogin.html"
+                  Source="http://zhlgd.whut.edu.cn/tpass/login?service=http%3A%2F%2Fcwsf.whut.edu.cn%2FcasLogin"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch" />
+        <TeachingTip x:Name="FetchMeterInfoTip"
+                     IsOpen="True"
+                     Target="{x:Bind FetchMeterInfoButton}"
+                     Title="获取电表信息"
+                     Subtitle="访问到电费查询页面后，选择你的信息至能够查看电费后，点击此按钮获取电表信息。">
+        </TeachingTip>
     </Grid>
 </Page>
