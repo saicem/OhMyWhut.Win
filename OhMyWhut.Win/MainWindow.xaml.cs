@@ -25,23 +25,28 @@ namespace OhMyWhut.Win
 
         public MainWindow()
         {
+            navOptions = new FrameNavigationOptions();
+            navOptions.IsNavigationStackEnabled = false;
+
             InitializeComponent();
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(TitleBar);
 
+            _ = InitializePreferenceAsync();
+        }
+
+        public async Task InitializePreferenceAsync()
+        {
             using (var scope = App.Current.Services.CreateScope())
             {
-                var appPreference = scope.ServiceProvider.GetService<AppPreference>();
+                var appPreference = AppPreference.GetInstance();
                 var db = scope.ServiceProvider.GetService<AppDbContext>();
-                appPreference.LoadFromDatabaseAsync(db).Wait();
+                await appPreference.LoadFromDatabaseAsync(db);
                 if (!appPreference.IsSetUserInfo)
                 {
-                    _ = Dialogs.ShowLoginDialogAsync(RootGrid.XamlRoot);
+                    RootFrame.NavigateToType(typeof(LoginPage),null,navOptions);
                 }
             }
-
-            navOptions = new FrameNavigationOptions();
-            navOptions.IsNavigationStackEnabled = false;
         }
 
         public string AppTitleText
@@ -58,29 +63,34 @@ namespace OhMyWhut.Win
 
         private void NavigationTap(object sender, TappedRoutedEventArgs e)
         {
+            if (!AppPreference.GetInstance().IsSetUserInfo)
+            {
+                NavigateTo(typeof(LoginPage));
+                return;
+            }
             var name = (sender as Button).Name;
             if (name == "HomeButton")
             {
-                RootFrame.NavigateToType(typeof(HomePage), null, navOptions);
+                NavigateTo(typeof(HomePage));
             }
             else if (name == "CourseButton")
             {
-                RootFrame.NavigateToType(typeof(CoursePage), null, navOptions);
+                NavigateTo(typeof(CoursePage));
             }
             else if (name == "BookButton")
             {
-                RootFrame.NavigateToType(typeof(BookPage), null, navOptions);
+                NavigateTo(typeof(BookPage));
             }
             else if (name == "ElectricFeeButton")
             {
-                var preference = App.Current.Services.GetService<AppPreference>();
+                var preference = AppPreference.GetInstance();
                 if (preference.IsSetMeterInfo)
                 {
-                    RootFrame.NavigateToType(typeof(ElectricFeePage), null, navOptions);
+                    NavigateTo(typeof(ElectricFeePage));
                 }
                 else
                 {
-                    RootFrame.NavigateToType(typeof(CwsfWebViewPage), null, navOptions);
+                    NavigateTo(typeof(CwsfWebViewPage));
                 }
             }
             else
@@ -89,9 +99,20 @@ namespace OhMyWhut.Win
             }
         }
 
+        private Type curNavigatedType = null;
+
+        private void NavigateTo(Type type)
+        {
+            if (type == curNavigatedType)
+            {
+                return;
+            }
+            curNavigatedType = type;
+            RootFrame.NavigateToType(type, null, navOptions);
+        }
         private void PersonProfile_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            _ = Dialogs.ShowLoginDialogAsync(RootGrid.XamlRoot);
+            RootFrame.NavigateToType(typeof(LoginPage), null, navOptions);
         }
     }
 }

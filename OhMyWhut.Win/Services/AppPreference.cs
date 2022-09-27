@@ -9,14 +9,14 @@ namespace OhMyWhut.Win.Services
     public class AppPreference
     {
         public bool IsSetUserInfo { get => UserName != string.Empty && Password != string.Empty; }
-        
+
         public bool IsSetMeterInfo { get => MeterId != string.Empty && FactoryCode != string.Empty; }
 
         public string UserName { get; set; } = string.Empty;
 
         public string Password { get; set; } = string.Empty;
 
-        public string RealName { get; set; } = string.Empty; 
+        public string RealName { get; set; } = string.Empty;
 
         public string MeterId { get; set; } = string.Empty;
 
@@ -30,12 +30,39 @@ namespace OhMyWhut.Win.Services
 
         public TimeSpan QuerySpanBooks { get; set; } = TimeSpan.FromDays(1);
 
+        private static AppPreference instance;
+
+        private static readonly object locker = new object();
+
+        private AppPreference()
+        {
+        }
+
+        public static AppPreference GetInstance()
+        {
+            lock (locker)
+            {
+                if (instance == null)
+                {
+                    instance = new AppPreference();
+                }
+            }
+            return instance;
+        }
+
         public async Task LoadFromDatabaseAsync(AppDbContext db)
         {
             await db.Preferences.AsNoTracking().ForEachAsync(p =>
             {
                 var propertyInfo = GetType().GetProperty(p.Key);
-                propertyInfo.SetValue(this, Convert.ChangeType(p.Value, propertyInfo.PropertyType));
+                if (propertyInfo.PropertyType.Name is "TimeSpan")
+                {
+                    propertyInfo.SetValue(this, TimeSpan.Parse(p.Value));
+                }
+                else
+                {
+                    propertyInfo.SetValue(this, p.Value);
+                }
             });
         }
 
@@ -51,7 +78,7 @@ namespace OhMyWhut.Win.Services
                     Value = items[i].GetValue(this).ToString()
                 };
             }
-            await db.AddRangeAsync(entities);
+            await db.Preferences.AddRangeAsync(entities);
             await db.SaveChangesAsync();
         }
     }

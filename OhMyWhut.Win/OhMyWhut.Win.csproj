@@ -17,6 +17,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\CourseBox.xaml" />
+    <None Remove="OhMyWhut\app.db" />
     <None Remove="Pages\BookPage.xaml" />
     <None Remove="Pages\ConfigPage.xaml" />
     <None Remove="Pages\CoursePage.xaml" />
@@ -34,6 +35,9 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="OhMyWhut\app.db">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 	<ItemGroup>
@@ -95,11 +99,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="OhMyWhut\app.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\ElectricFeePage.xaml">
