@@ -78,6 +78,7 @@ namespace OhMyWhut.Win.Services
                     Value = items[i].GetValue(this).ToString()
                 };
             }
+            await db.Database.ExecuteSqlRawAsync($"DELETE FROM {nameof(Preference)}");
             await db.Preferences.AddRangeAsync(entities);
             await db.SaveChangesAsync();
         }

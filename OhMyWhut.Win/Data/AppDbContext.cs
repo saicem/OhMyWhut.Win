@@ -1,6 +1,9 @@
 ﻿using System;
+using System.IO;
 using Microsoft.EntityFrameworkCore;
 using OhMyWhut.Win.Migrations;
+using Windows.ApplicationModel;
+using Windows.Storage;
 
 namespace OhMyWhut.Win.Data
 {
@@ -30,7 +33,13 @@ namespace OhMyWhut.Win.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlite($"Data Source={System.IO.Path.Join(App.DataFolder, "app.db")}");
+            string demoDatabasePath = Package.Current.InstalledLocation.Path + @"\Assets\app.db";
+            string databasePath = ApplicationData.Current.LocalFolder.Path + @"\app.db";
+            if (!File.Exists(databasePath))
+            {
+                File.Copy(demoDatabasePath, databasePath);
+            }
+            options.UseSqlite($"Data Source={databasePath}");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

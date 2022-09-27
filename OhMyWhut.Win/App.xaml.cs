@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using OhMyWhut.Engine;
 using OhMyWhut.Win.Data;
-using OhMyWhut.Win.Extentions;
 using OhMyWhut.Win.Services;
 using OhMyWhut.Win.ViewModels;
 
@@ -65,9 +64,8 @@ namespace OhMyWhut.Win
         private static IServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
-            services.AddSingleton<AppPreference>();
             services.AddSingleton<Gluttony>();
-            services.AddAppDbContext();
+            services.AddDbContext<AppDbContext>(builder => builder.UseSqlite());
             services.AddScoped<Logger>();
             services.AddScoped<DataFetcher>();
 
