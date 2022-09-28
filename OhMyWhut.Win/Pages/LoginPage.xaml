@@ -10,7 +10,7 @@
     <Grid>
         <StackPanel Orientation="Vertical"
                     Margin="15">
-            <TextBlock Text="{x:Bind AppPreference.UserName}" />
+            <TextBlock Text="{x:Bind AppPreference.UserName,Mode=OneWay}" />
             <TextBox x:Name="usernameBox"
                      PlaceholderText="用户名"
                      Padding="8"

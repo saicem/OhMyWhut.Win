@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Microsoft.EntityFrameworkCore;
-using OhMyWhut.Win.Migrations;
 using Windows.ApplicationModel;
 using Windows.Storage;
 

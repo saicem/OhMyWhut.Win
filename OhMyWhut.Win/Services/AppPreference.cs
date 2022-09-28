@@ -3,34 +3,83 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using OhMyWhut.Win.Data;
+using OhMyWhut.Win.ViewModels;
 
 namespace OhMyWhut.Win.Services
 {
-    public class AppPreference
+    public class AppPreference : BindableBase
     {
         public bool IsSetUserInfo { get => UserName != string.Empty && Password != string.Empty; }
 
         public bool IsSetMeterInfo { get => MeterId != string.Empty && FactoryCode != string.Empty; }
 
-        public string UserName { get; set; } = string.Empty;
+        private string _username = string.Empty;
+
+        public string UserName
+        {
+            get => _username;
+            set => Set(ref _username, value);
+        }
 
         public string Password { get; set; } = string.Empty;
 
         public string RealName { get; set; } = string.Empty;
 
-        public string RoomId { get; set; } = string.Empty;
+        private string _roomId = string.Empty;
 
-        public string MeterId { get; set; } = string.Empty;
+        public string RoomId
+        {
+            get => _roomId;
+            set => Set(ref _roomId, value);
+        }
 
-        public string FactoryCode { get; set; } = string.Empty;
+        private string _meterId = string.Empty;
 
-        public string Dormitory { get; set; } = string.Empty;
+        public string MeterId
+        {
+            get => _meterId;
+            set => Set(ref _meterId, value);
+        }
 
-        public TimeSpan QuerySpanCourses { get; set; } = TimeSpan.FromDays(7);
+        private string _factoryCode = string.Empty;
 
-        public TimeSpan QuerySpanElectricFee { get; set; } = TimeSpan.FromHours(6);
+        public string FactoryCode
+        {
+            get => _factoryCode;
+            set => Set(ref _factoryCode, value);
+        }
 
-        public TimeSpan QuerySpanBooks { get; set; } = TimeSpan.FromDays(1);
+        private string _dormitory = string.Empty;
+
+        public string Dormitory
+        {
+            get => _dormitory;
+            set => Set(ref _dormitory, value);
+        }
+
+        private TimeSpan _querySpanCourses = TimeSpan.FromDays(7);
+
+        public TimeSpan QuerySpanCourses
+        {
+            get => _querySpanCourses;
+            set => Set(ref _querySpanCourses, value);
+        }
+
+        private TimeSpan _querySpanElectricFee = TimeSpan.FromHours(6);
+
+        public TimeSpan QuerySpanElectricFee
+        {
+            get => _querySpanCourses;
+            set => Set(ref _querySpanElectricFee, value);
+        }
+
+        private TimeSpan _querySpanBooks = TimeSpan.FromDays(1);
+
+        public TimeSpan QuerySpanBooks
+        {
+            get => _querySpanBooks;
+            set => Set(ref _querySpanElectricFee, value);
+        }
 
         public async Task LoadFromDatabaseAsync(AppDbContext db)
         {
