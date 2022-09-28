@@ -30,7 +30,7 @@
                 <TextBlock x:Name="AppTitle"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Text="{x:Bind AppTitleText}"
+                           Text="OhMyWhut"
                            Style="{StaticResource CaptionTextBlockStyle}" />
             </Border>
         </Grid>

@@ -1,36 +1,56 @@
 ﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using OhMyWhut.Win.Data;
-using OhMyWhut.Win.ViewModels;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Windows.Storage;
 
 namespace OhMyWhut.Win.Services
 {
-    public class AppPreference : BindableBase
+    public class AppPreference : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public bool IsSetUserInfo { get => UserName != string.Empty && Password != string.Empty; }
 
         public bool IsSetMeterInfo { get => MeterId != string.Empty && FactoryCode != string.Empty; }
+
+        private DateTimeOffset _termStartDay = DateTimeOffset.Now;
+
+        public DateTimeOffset TermStartDay
+        {
+            get => _termStartDay;
+            set => Save(ref _termStartDay, value);
+        }
 
         private string _username = string.Empty;
 
         public string UserName
         {
             get => _username;
-            set => Set(ref _username, value);
+            set => Save(ref _username, value);
         }
 
-        public string Password { get; set; } = string.Empty;
+        private string _password = string.Empty;
 
-        public string RealName { get; set; } = string.Empty;
+        public string Password
+        {
+            get => _password;
+            set => Save(ref _password, value);
+        }
+
+        private string _realName = string.Empty;
+
+        public string RealName
+        {
+            get => _realName;
+            set => Save(ref _realName, value);
+        }
 
         private string _roomId = string.Empty;
 
         public string RoomId
         {
             get => _roomId;
-            set => Set(ref _roomId, value);
+            set => Save(ref _roomId, value);
         }
 
         private string _meterId = string.Empty;
@@ -38,7 +58,7 @@ namespace OhMyWhut.Win.Services
         public string MeterId
         {
             get => _meterId;
-            set => Set(ref _meterId, value);
+            set => Save(ref _meterId, value);
         }
 
         private string _factoryCode = string.Empty;
@@ -46,7 +66,7 @@ namespace OhMyWhut.Win.Services
         public string FactoryCode
         {
             get => _factoryCode;
-            set => Set(ref _factoryCode, value);
+            set => Save(ref _factoryCode, value);
         }
 
         private string _dormitory = string.Empty;
@@ -54,7 +74,7 @@ namespace OhMyWhut.Win.Services
         public string Dormitory
         {
             get => _dormitory;
-            set => Set(ref _dormitory, value);
+            set => Save(ref _dormitory, value);
         }
 
         private TimeSpan _querySpanCourses = TimeSpan.FromDays(7);
@@ -62,7 +82,7 @@ namespace OhMyWhut.Win.Services
         public TimeSpan QuerySpanCourses
         {
             get => _querySpanCourses;
-            set => Set(ref _querySpanCourses, value);
+            set => Save(ref _querySpanCourses, value);
         }
 
         private TimeSpan _querySpanElectricFee = TimeSpan.FromHours(6);
@@ -70,7 +90,7 @@ namespace OhMyWhut.Win.Services
         public TimeSpan QuerySpanElectricFee
         {
             get => _querySpanCourses;
-            set => Set(ref _querySpanElectricFee, value);
+            set => Save(ref _querySpanElectricFee, value);
         }
 
         private TimeSpan _querySpanBooks = TimeSpan.FromDays(1);
@@ -78,40 +98,36 @@ namespace OhMyWhut.Win.Services
         public TimeSpan QuerySpanBooks
         {
             get => _querySpanBooks;
-            set => Set(ref _querySpanElectricFee, value);
+            set => Save(ref _querySpanElectricFee, value);
         }
 
-        public async Task LoadFromDatabaseAsync(AppDbContext db)
-        {
-            await db.Preferences.AsNoTracking().ForEachAsync(p =>
-            {
-                var propertyInfo = GetType().GetProperty(p.Key);
-                if (propertyInfo.PropertyType.Name is "TimeSpan")
-                {
-                    propertyInfo.SetValue(this, TimeSpan.Parse(p.Value));
-                }
-                else
-                {
-                    propertyInfo.SetValue(this, p.Value);
-                }
-            });
-        }
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public async Task SaveAsync(AppDbContext db)
+        private bool Save<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
-            var items = GetType().GetProperties().Where(p => p.CanWrite).ToArray();
-            var entities = new Preference[items.Length];
-            for (int i = 0; i < items.Length; i++)
+            if (Equals(storage, value))
             {
-                entities[i] = new Preference
-                {
-                    Key = items[i].Name,
-                    Value = items[i].GetValue(this).ToString()
-                };
+                return false;
             }
-            await db.Database.ExecuteSqlRawAsync($"DELETE FROM {nameof(Preference)}");
-            await db.Preferences.AddRangeAsync(entities);
-            await db.SaveChangesAsync();
+
+            storage = value;
+            ApplicationData.Current.LocalSettings.Values[propertyName] = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
+
+        public void Load()
+        {
+            foreach (var propertyInfo in GetType().GetProperties())
+            {
+                var value = ApplicationData.Current.LocalSettings.Values[propertyInfo.Name];
+                if (value == null)
+                {
+                    continue;
+                }
+                propertyInfo.SetValue(this, value);
+            }
         }
     }
 }

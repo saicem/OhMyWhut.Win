@@ -13,8 +13,6 @@ namespace OhMyWhut.Win.Data
 
         internal DbSet<Book> Books { get; set; }
 
-        internal DbSet<Preference> Preferences { get; set; }
-
         internal DbSet<ElectricFee> ElectricFees { get; set; }
 
         internal DbSet<Log> Logs { get; set; }
@@ -42,13 +40,6 @@ namespace OhMyWhut.Win.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Preference>(eb =>
-            {
-                eb.HasKey(x => x.Key);
-                eb.Property(x => x.Key).HasMaxLength(64).IsRequired();
-                eb.Property(x => x.Value).HasMaxLength(64).IsRequired();
-            });
-
             builder.Entity<MyCourse>(eb =>
             {
                 eb.HasKey(x => x.Id);

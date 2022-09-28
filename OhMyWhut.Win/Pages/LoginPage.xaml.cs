@@ -32,7 +32,6 @@ namespace OhMyWhut.Win.Pages
             using(var scope = App.Current.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetService<AppDbContext>();
-                await preference.SaveAsync(db);
             }
         }
 

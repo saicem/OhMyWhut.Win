@@ -16,7 +16,7 @@ namespace OhMyWhut.Win.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         protected bool Set<T>(ref T storage, T value,
-            [CallerMemberName] String propertyName = null)
+            [CallerMemberName] string propertyName = null)
         {
             if (Equals(storage, value))
             {
