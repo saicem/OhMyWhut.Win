@@ -25,7 +25,7 @@
                            Margin="0,16"
                            FontSize="{StaticResource SubtitleTextBlockFontSize}" />
                 <DatePicker Header="选择开学时间"
-                            Date="{x:Bind Preference.TermStartDay, Mode=TwoWay}" />
+                            Date="{x:Bind Preference.TermStartDateTime, Mode=TwoWay}" />
                 <TextBlock Text="获取电费的时间间隔（小时）" />
                 <ComboBox x:Name="QuerySpanElectricComboBox"
                           SelectionChanged="QuerySpanElectricComboBox_SelectionChanged"

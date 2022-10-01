@@ -10,6 +10,19 @@
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
+            <SolidColorBrush x:Key="WindowCaptionBackground">Transparent</SolidColorBrush>
+            <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Transparent</SolidColorBrush>
+            <SolidColorBrush x:Key="WindowCaptionForeground">Red</SolidColorBrush>
+            <SolidColorBrush x:Key="WindowCaptionForegroundDisabled">Pink</SolidColorBrush>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <AcrylicBrush x:Key="MyArcylicBrush"
+                                  TintColor="#1113" 
+                                  TintOpacity="0.2"
+                                  TintLuminosityOpacity="0.5"
+                                  FallbackColor="#1113"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

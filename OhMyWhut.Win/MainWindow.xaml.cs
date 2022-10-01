@@ -29,11 +29,7 @@ namespace OhMyWhut.Win
             ExtendsContentIntoTitleBar = true;
             SetTitleBar(TitleBar);
             Navigator = new Navigator(null, RootFrame);
-
-            if (Preference.IsSetUserInfo)
-            {
-                Navigator.NavigateTo(typeof(LoginPage));
-            }
+            Navigator.NavigateTo(typeof(HomePage));
         }
 
         private void MainWindow_Closed(object sender, WindowEventArgs args)

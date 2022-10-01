@@ -5,9 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
-    <Border BorderBrush="Khaki"
-            BorderThickness="2"
-            Background="Yellow"
+    <Border BorderThickness="2"
+            Background="{ThemeResource MyArcylicBrush}"
             CornerRadius="8"
             Margin="2"
             Padding="8">

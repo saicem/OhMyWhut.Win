@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OhMyWhut.Win.Data;
@@ -11,12 +6,10 @@ using OhMyWhut.Win.Services;
 
 namespace OhMyWhut.Win.ViewModels
 {
-    public class CourseViewModel : INotifyPropertyChanged
+    public class CourseViewModel : BindableBase
     {
         public ObservableCollection<MyCourse> CourseList { get; }
             = new ObservableCollection<MyCourse>();
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public CourseViewModel() => Task.Run(GetCoursesAsync);
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Windows.Storage;
 
@@ -13,12 +14,14 @@ namespace OhMyWhut.Win.Services
 
         public bool IsSetMeterInfo { get => MeterId != string.Empty && FactoryCode != string.Empty; }
 
-        private DateTimeOffset _termStartDay = DateTimeOffset.Now;
+        public DateOnly TermStartDay { get => DateOnly.FromDateTime(_termStartDateTime.DateTime); }
 
-        public DateTimeOffset TermStartDay
+        private DateTimeOffset _termStartDateTime = DateTimeOffset.Now;
+
+        public DateTimeOffset TermStartDateTime
         {
-            get => _termStartDay;
-            set => Save(ref _termStartDay, value);
+            get => _termStartDateTime;
+            set => Save(ref _termStartDateTime, value);
         }
 
         private string _username = string.Empty;
@@ -119,7 +122,7 @@ namespace OhMyWhut.Win.Services
 
         public void Load()
         {
-            foreach (var propertyInfo in GetType().GetProperties())
+            foreach (var propertyInfo in GetType().GetProperties().Where(x => x.CanWrite))
             {
                 var value = ApplicationData.Current.LocalSettings.Values[propertyInfo.Name];
                 if (value == null)

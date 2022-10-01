@@ -5,11 +5,24 @@
       xmlns:data="using:OhMyWhut.Win.Data"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      mc:Ignorable="d"
-      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+      mc:Ignorable="d">
 
-    <Grid>
-        <Grid x:Name="CourseGrid">
+    <Grid PointerWheelChanged="Slider_PointerWheelChanged"
+          Background="{ThemeResource MyArcylicBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Slider x:Name="WeekSelectSlider"
+                AutomationProperties.Name="Slider with ticks"
+                Margin="16,4"
+                Value="{x:Bind SelectedWeek}"
+                Minimum="1"
+                Maximum="20"
+                TickFrequency="1"
+                TickPlacement="Outside" />
+        <Grid x:Name="CourseGrid"
+              Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="2*" />
@@ -27,34 +40,6 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Viewbox Grid.Row="0"
-                     Grid.Column="0">
-                <TextBlock Text="周一" />
-            </Viewbox>
-            <Viewbox Grid.Row="0"
-                     Grid.Column="1">
-                <TextBlock Text="周二" />
-            </Viewbox>
-            <Viewbox Grid.Row="0"
-                     Grid.Column="2">
-                <TextBlock Text="周三" />
-            </Viewbox>
-            <Viewbox Grid.Row="0"
-                     Grid.Column="3">
-                <TextBlock Text="周四" />
-            </Viewbox>
-            <Viewbox Grid.Row="0"
-                     Grid.Column="4">
-                <TextBlock Text="周五" />
-            </Viewbox>
-            <Viewbox Grid.Row="0"
-                     Grid.Column="5">
-                <TextBlock Text="周六" />
-            </Viewbox>
-            <Viewbox Grid.Row="0"
-                     Grid.Column="6">
-                <TextBlock Text="周日" />
-            </Viewbox>
         </Grid>
     </Grid>
 </Page>

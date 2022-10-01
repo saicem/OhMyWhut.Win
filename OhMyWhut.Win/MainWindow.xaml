@@ -11,6 +11,18 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <Rectangle Grid.RowSpan="2">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0,0"
+                                     EndPoint="1,1">
+                    <GradientStop Color="#81FBB8"
+                                  Offset="0.0" />
+                    <GradientStop Color="#28C76F"
+                                  Offset="1.0" />
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="56" />
@@ -44,14 +56,14 @@
             </Grid.ColumnDefinitions>
             <StackPanel>
                 <StackPanel.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="HorizontalAlignment"
-                            Value="Center" />
-                    <Setter Property="Margin"
+                    <Style TargetType="Button">
+                        <Setter Property="HorizontalAlignment"
+                                Value="Center" />
+                        <Setter Property="Margin"
                                 Value="0,4" />
                         <Setter Property="FocusVisualPrimaryBrush"
                                 Value="{ThemeResource SystemBaseHighColor}" />
-                </Style>
+                    </Style>
                 </StackPanel.Resources>
                 <Button x:Name="HomeButton"
                         Tapped="NavigationTap">
