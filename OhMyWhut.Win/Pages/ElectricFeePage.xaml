@@ -25,6 +25,9 @@
                 <ctWinUI:DataGridTextColumn Header="总电费"
                                             Binding="{Binding Total}"
                                             Tag="ExpireDate" />
+                <ctWinUI:DataGridTextColumn Header="时间"
+                                            Binding="{Binding CreatedAt}"
+                                            Tag="CreatedAt" />
             </ctWinUI:DataGrid.Columns>
         </ctWinUI:DataGrid>
     </Grid>

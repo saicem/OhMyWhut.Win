@@ -20,7 +20,8 @@
                            Initials="ABC"
                            Height="32"
                            Width="32"
-                           Tapped="PersonProfile_Tapped" />
+                           Tapped="PersonProfile_Tapped"
+                           ContextRequested="PersonProfile_ContextRequested" />
             <Border x:Name="TitleBar"
                     Grid.Column="1"
                     IsHitTestVisible="True"
@@ -36,21 +37,22 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="56" />
+                <ColumnDefinition Width="*"
+                                  MinWidth="200" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <StackPanel.Resources>
                 <Style TargetType="Button">
                     <Setter Property="HorizontalAlignment"
                             Value="Center" />
                     <Setter Property="Margin"
-                            Value="0,5" />
-                    <Setter Property="BorderBrush"
-                            Value="#fff" />
+                                Value="0,4" />
+                        <Setter Property="FocusVisualPrimaryBrush"
+                                Value="{ThemeResource SystemBaseHighColor}" />
                 </Style>
-            </Grid.Resources>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="56" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <StackPanel>
+                </StackPanel.Resources>
                 <Button x:Name="HomeButton"
                         Tapped="NavigationTap">
                     <SymbolIcon Symbol="Home" />
@@ -74,9 +76,7 @@
                 </Button>
             </StackPanel>
             <Border Grid.Column="1"
-                    Padding="5"
-                    BorderBrush="#000"
-                    BorderThickness="2"
+                    BorderThickness="1"
                     CornerRadius="8">
                 <Frame x:Name="RootFrame" />
             </Border>

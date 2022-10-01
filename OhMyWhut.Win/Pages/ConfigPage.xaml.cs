@@ -36,7 +36,22 @@ namespace OhMyWhut.Win.Pages
 
         private void ResetMeterButton_Click(object sender, RoutedEventArgs e)
         {
-            App.MainWindow.NavigateTo(typeof(CwsfWebViewPage));
+            App.MainWindow.Navigator.NavigateTo(typeof(CwsfWebViewPage));
+        }
+
+        private void QuerySpanElectricComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var t = (sender as ComboBox).SelectedItem;
+        }
+
+        private void QuerySpanBookComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void FetchCourses_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

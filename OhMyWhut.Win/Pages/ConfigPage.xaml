@@ -2,42 +2,120 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:OhMyWhut.Win.Pages"
+      xmlns:sys="using:System"
       xmlns:ctWinUI="using:CommunityToolkit.WinUI.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <StackPanel.Resources>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Margin"
-                            Value="4" />
-                </Style>
-            </StackPanel.Resources>
-            <TextBlock Text="{x:Bind Preference.Dormitory}" />
-            <TextBlock Text="{x:Bind Preference.FactoryCode}" />
-            <TextBlock Text="{x:Bind Preference.RoomId}" />
-            <TextBlock Text="{x:Bind Preference.MeterId}" />
-            <Button x:Name="ResetMeterButton"
-                    Content="重新获取电表信息"
-                    Click="ResetMeterButton_Click" />
-        </StackPanel>
-        <ctWinUI:DataGrid x:Name="DataGrid"
-                          Grid.Row="1"
-                          AutoGenerateColumns="True"
-                          SelectionMode="Single"
-                          IsReadOnly="True"
-                          ItemsSource="{x:Bind ViewModel.ConfigViewModel.LogCollection, Mode=OneWay}">
-            <ctWinUI:DataGrid.Resources>
-                <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush">Transparent</SolidColorBrush>
-                <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush">Transparent</SolidColorBrush>
-            </ctWinUI:DataGrid.Resources>
-        </ctWinUI:DataGrid>
+    <Grid Padding="56,32,32,0">
+        <ScrollViewer IsVerticalScrollChainingEnabled="True"
+                      VerticalScrollMode="Enabled"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Margin"
+                                Value="0,8" />
+                    </Style>
+                </StackPanel.Resources>
+
+                <TextBlock Text="时间及日期"
+                           Margin="0,16"
+                           FontSize="{StaticResource SubtitleTextBlockFontSize}" />
+                <DatePicker Header="选择开学时间"
+                            Date="{x:Bind Preference.TermStartDay, Mode=TwoWay}" />
+                <TextBlock Text="获取电费的时间间隔（小时）" />
+                <ComboBox x:Name="QuerySpanElectricComboBox"
+                          SelectionChanged="QuerySpanElectricComboBox_SelectionChanged"
+                          Width="100">
+                    <x:Int32>6</x:Int32>
+                    <x:Int32>12</x:Int32>
+                    <x:Int32>24</x:Int32>
+                </ComboBox>
+                <TextBlock Text="获取图书的时间间隔（小时）" />
+                <ComboBox x:Name="QuerySpanBookComboBox"
+                          SelectionChanged="QuerySpanBookComboBox_SelectionChanged"
+                          Width="100">
+                    <x:Int32>12</x:Int32>
+                    <x:Int32>24</x:Int32>
+                    <x:Int32>48</x:Int32>
+                </ComboBox>
+
+                <TextBlock Text="数据更新"
+                           Margin="0,16"
+                           FontSize="{StaticResource SubtitleTextBlockFontSize}" />
+                <Button x:Name="FetchCourses"
+                        Content="重新获取课表"
+                        Click="FetchCourses_Click" />
+
+                <TextBlock Text="宿舍信息"
+                           FontSize="{StaticResource SubtitleTextBlockFontSize}" />
+                <TextBlock Text="宿舍信息" />
+                <Border BorderThickness="1"
+                        HorizontalAlignment="Left"
+                        BorderBrush="{StaticResource CardBackgroundFillColorDefault}"
+                        Padding="8"
+                        Width="200">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="宿舍"
+                                   Grid.Row="0"
+                                   Grid.Column="0" />
+                        <TextBlock Text="{x:Bind Preference.Dormitory, Mode=OneWay}"
+                                   Grid.Row="0"
+                                   Grid.Column="1" />
+                        <TextBlock Text="FactoryCode"
+                                   Grid.Row="1"
+                                   Grid.Column="0" />
+                        <TextBlock Text="{x:Bind Preference.FactoryCode, Mode=OneWay}"
+                                   Grid.Row="1"
+                                   Grid.Column="1" />
+                        <TextBlock Text="RoomId"
+                                   Grid.Row="2"
+                                   Grid.Column="0" />
+                        <TextBlock Text="{x:Bind Preference.RoomId, Mode=OneWay}"
+                                   Grid.Row="2"
+                                   Grid.Column="1" />
+                        <TextBlock Text="MeterId"
+                                   Grid.Row="3"
+                                   Grid.Column="0" />
+                        <TextBlock Text="{x:Bind Preference.MeterId, Mode=OneWay}"
+                                   Grid.Row="3"
+                                   Grid.Column="1" />
+                    </Grid>
+                </Border>
+
+                <Button x:Name="ResetMeterButton"
+                        Content="重新获取宿舍信息"
+                        Click="ResetMeterButton_Click" />
+
+                <TextBlock Text="日志记录"
+                           Margin="0,16"
+                           FontSize="{StaticResource SubtitleTextBlockFontSize}" />
+
+                <ctWinUI:DataGrid x:Name="DataGrid"
+                                  Grid.Row="1"
+                                  AutoGenerateColumns="True"
+                                  SelectionMode="Single"
+                                  IsReadOnly="True"
+                                  ItemsSource="{x:Bind ViewModel.ConfigViewModel.LogCollection, Mode=OneWay}">
+                    <ctWinUI:DataGrid.Resources>
+                        <SolidColorBrush x:Key="DataGridCellFocusVisualPrimaryBrush">Transparent</SolidColorBrush>
+                        <SolidColorBrush x:Key="DataGridCellFocusVisualSecondaryBrush">Transparent</SolidColorBrush>
+                    </ctWinUI:DataGrid.Resources>
+                </ctWinUI:DataGrid>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>

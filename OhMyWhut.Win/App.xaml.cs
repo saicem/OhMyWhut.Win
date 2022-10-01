@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using OhMyWhut.Engine;
 using OhMyWhut.Win.Data;
+using OhMyWhut.Win.Pages;
 using OhMyWhut.Win.Services;
 using OhMyWhut.Win.ViewModels;
 
@@ -36,6 +37,7 @@ namespace OhMyWhut.Win
             Services = ConfigureServices();
             UpdateDatabase();
             InitializeComponent();
+            Preference.Load();
         }
 
         private void UpdateDatabase()
