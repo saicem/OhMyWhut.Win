@@ -10,19 +10,27 @@
     <Grid>
         <StackPanel Orientation="Vertical"
                     Margin="15">
-            <TextBlock Text="{x:Bind AppPreference.UserName,Mode=OneWay}" />
+            <TextBlock Text="已登录用户"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="{x:Bind AppPreference.UserName,Mode=OneWay}"
+                       HorizontalAlignment="Center" />
             <TextBox x:Name="usernameBox"
                      PlaceholderText="用户名"
                      Padding="8"
-                     Margin="0,205,0,5"
                      Width="200" />
             <PasswordBox x:Name="passwordBox"
                          PlaceholderText="密码"
                          Padding="8"
                          Margin="0,5"
                          Width="200" />
+            <TextBlock x:Name="FailedTip"
+                       Text="登录失败"
+                       HorizontalAlignment="Center"
+                       Foreground="Red"
+                       Visibility="Collapsed" />
             <Button x:Name="LoginButton"
                     Content="登录"
+                    HorizontalAlignment="Center"
                     Click="LoginButton_Click" />
         </StackPanel>
     </Grid>

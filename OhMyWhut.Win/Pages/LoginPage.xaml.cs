@@ -27,11 +27,19 @@ namespace OhMyWhut.Win.Pages
 
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            var preference = App.Preference;
-            (preference.UserName, preference.Password) = GetBoxInfo();
-            using(var scope = App.Current.Services.CreateScope())
+            (App.Preference.UserName, App.Preference.Password) = GetBoxInfo();
+            using (var scope = App.Current.Services.CreateScope())
             {
-                var db = scope.ServiceProvider.GetService<AppDbContext>();
+                var dataFetcher = scope.ServiceProvider.GetService<DataFetcher>();
+                var ok = await dataFetcher.UpdateCoursesAsync();
+                if (ok)
+                {
+                    App.MainWindow.Navigator.NavigateTo(typeof(HomePage));
+                }
+                else
+                {
+                    FailedTip.Visibility = Visibility.Visible;
+                }
             }
         }
 
