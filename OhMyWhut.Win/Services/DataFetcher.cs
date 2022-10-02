@@ -22,73 +22,19 @@ namespace OhMyWhut.Win.Services
             _gluttony = gluttony;
         }
 
-        public void CheckUserInfo()
-        {
-            if (_gluttony.HasSetUserInfo)
-            {
-                return;
-            }
-            var preference = App.Preference;
-            if (preference.IsSetUserInfo)
-            {
-                _gluttony.SetUserInfo(preference.UserName, preference.Password);
-            }
-            else
-            {
-                throw new Exception("未设置用户信息");
-            }
-        }
-
-        public void CheckMeterInfo()
-        {
-            if (_gluttony.HasSetElectricMeter)
-            {
-                return;
-            }
-            var preference = App.Preference;
-            if (preference.IsSetMeterInfo)
-            {
-                _gluttony.SetMeter(preference.MeterId, preference.FactoryCode);
-            }
-            else
-            {
-                throw new Exception("未设置电表信息");
-            }
-        }
-
-        //public async Task<DataFetcher> LoginAsync()
-        //{
-        //    try
-        //    {
-        //        await _gluttony.LoginAsync();
-        //        ToastNotificationManager.CreateToastNotifier()
-        //            .Show(new ToastNotification(new ToastContentBuilder().AddText("登录成功").GetToastContent().GetXml()));
-        //        _ = _logger.AddLogAsync(LogType.Login, "success");
-        //    }
-        //    catch (RequestFailedException ex)
-        //    {
-        //        ToastNotificationManager.CreateToastNotifier()
-        //            .Show(new ToastNotification(new ToastContentBuilder().AddText(ex.Message).GetToastContent().GetXml()));
-        //        _ = _logger.AddLogAsync(LogType.Login, "fail");
-        //    }
-        //    return this;
-        //}
-
         public async Task<ICollection<MyCourse>> GetCoursesAsync()
         {
-            await UpdateCoursesAsync();
+            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchCourses)
+                >= App.Preference.QuerySpanCourses)
+            {
+                await UpdateCoursesAsync();
+            }
             return await _db.MyCourses.AsNoTracking().ToArrayAsync();
         }
 
-        public async Task UpdateCoursesAsync()
+        public async Task<bool> UpdateCoursesAsync()
         {
-            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchCourses)
-                <= App.Preference.QuerySpanCourses)
-            {
-                return;
-            }
-            CheckUserInfo();
-            var courses = await _gluttony.GetMyCoursesAsync().ConfigureAwait(false);
+            var courses = await _gluttony.GetMyCoursesAsync(App.Preference.UserName, App.Preference.Password).ConfigureAwait(false);
             var myCourseBag = new ConcurrentBag<MyCourse>();
             Parallel.ForEach(courses, course =>
             {
@@ -108,23 +54,23 @@ namespace OhMyWhut.Win.Services
             await _db.MyCourses.AddRangeAsync(myCourseBag);
             await _db.Logs.AddAsync(new Log(LogType.FetchCourses, "success"));
             await _db.SaveChangesAsync();
+            return true;
         }
 
         public async Task<ICollection<Book>> GetBooksAsync()
         {
-            await UpdateBooksAsync();
+            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchBooks)
+                >= App.Preference.QuerySpanBooks)
+            {
+                await UpdateBooksAsync();
+            }
+
             return await _db.Books.AsNoTracking().ToListAsync();
         }
 
-        public async Task UpdateBooksAsync()
+        public async Task<bool> UpdateBooksAsync()
         {
-            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchBooks)
-                <= App.Preference.QuerySpanBooks)
-            {
-                return;
-            }
-            CheckUserInfo();
-            var books = await _gluttony.GetBooksAsync();
+            var books = await _gluttony.GetBooksAsync(App.Preference.UserName, App.Preference.Password);
             var bookBag = from book in books
                           select new Book
                           {
@@ -136,24 +82,25 @@ namespace OhMyWhut.Win.Services
             await _db.Books.AddRangeAsync(bookBag);
             await _db.Logs.AddAsync(new Log(LogType.FetchBooks, "success"));
             await _db.SaveChangesAsync();
+            return true;
         }
 
         public async Task<List<ElectricFee>> GetElectricFeeAsync()
         {
-            await UpdateElectricFeeAsync();
+            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchElectricFee)
+                >= App.Preference.QuerySpanElectricFee)
+            {
+                await UpdateElectricFeeAsync();
+            }
             return await _db.ElectricFees.AsNoTracking().ToListAsync();
         }
 
-        public async Task UpdateElectricFeeAsync()
+        public async Task<bool> UpdateElectricFeeAsync()
         {
-            if (await _logger.GetLatestRecordTimeSpanAsync(LogType.FetchElectricFee)
-                <= App.Preference.QuerySpanElectricFee)
-            {
-                return;
-            }
-            CheckUserInfo();
-            CheckMeterInfo();
-            var fee = await _gluttony.GetElectricFeeAsync();
+            var fee = await _gluttony.GetElectricFeeAsync(App.Preference.UserName,
+                                                          App.Preference.Password,
+                                                          App.Preference.MeterId,
+                                                          App.Preference.FactoryCode);
             await _db.ElectricFees.AddAsync(new ElectricFee
             {
                 RemainName = fee.RemainName,
@@ -164,19 +111,7 @@ namespace OhMyWhut.Win.Services
             });
             await _db.Logs.AddAsync(new Log(LogType.FetchElectricFee, "success"));
             await _db.SaveChangesAsync();
+            return true;
         }
-
-        //private async Task<string> FetchUserNameAsync()
-        //{
-        //    if (!isLogin)
-        //    {
-        //        await LoginAsync();
-        //    }
-        //    var res = await _gluttony.LoginToJwc();
-        //    var htmlDoc = new HtmlDocument();
-        //    htmlDoc.Load(res);
-        //    var name = htmlDoc.DocumentNode.SelectSingleNode("html/body/div/div[1]/div[1]/div[1]/div/div[2]/div[1]/p/b").InnerText;
-        //    return name;
-        //}
     }
 }

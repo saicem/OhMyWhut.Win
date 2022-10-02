@@ -12,12 +12,10 @@ using Windows.System.Power.Diagnostics;
 
 namespace OhMyWhut.Win.ViewModels
 {
-    public class ElectricFeeViewModel : INotifyPropertyChanged
+    public class ElectricFeeViewModel
     {
         public ObservableCollection<ElectricFee> ElectricFeeList { get; }
             = new ObservableCollection<ElectricFee>();
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public ElectricFeeViewModel() => Task.Run(GetElectricFeeAsync);
 
