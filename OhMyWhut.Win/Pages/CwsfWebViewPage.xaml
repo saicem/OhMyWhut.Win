@@ -8,18 +8,17 @@
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Button x:Name="FetchMeterInfoButton"
-                Content="获取电表信息"
-                Click="Button_Click" />
         <WebView2 x:Name="CwsfWebView"
-                  Grid.Row="1"
                   Source="http://zhlgd.whut.edu.cn/tpass/login?service=http%3A%2F%2Fcwsf.whut.edu.cn%2FcasLogin"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch" />
+        <Button x:Name="FetchMeterInfoButton"
+                Canvas.ZIndex="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Margin="0,8"
+                Content="获取电表信息"
+                Click="Button_Click" />
         <TeachingTip x:Name="FetchMeterInfoTip"
                      IsOpen="True"
                      Target="{x:Bind FetchMeterInfoButton}"
