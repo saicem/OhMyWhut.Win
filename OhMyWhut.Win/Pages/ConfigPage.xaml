@@ -50,6 +50,14 @@
                         Content="重新获取课表"
                         Click="FetchCourses_Click" />
 
+                <TextBlock Text="课表页面"
+                           Margin="0,16"
+                           FontSize="{StaticResource SubtitleTextBlockFontSize}" />
+                <ToggleSwitch Header="是否显示课表周指示滑块"
+                              IsOn="{x:Bind Preference.IsShowSelectedWeekSlider, Mode=TwoWay}"
+                              OnContent="显示"
+                              OffContent="不显示"/>
+
                 <TextBlock Text="宿舍信息"
                            FontSize="{StaticResource SubtitleTextBlockFontSize}" />
                 <TextBlock Text="宿舍信息" />

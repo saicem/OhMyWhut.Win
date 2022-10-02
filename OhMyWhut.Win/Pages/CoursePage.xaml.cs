@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using OhMyWhut.Win.Controls;
+using OhMyWhut.Win.Services;
 using OhMyWhut.Win.ViewModels;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -26,11 +27,27 @@ namespace OhMyWhut.Win.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class CoursePage : Page
+    public sealed partial class CoursePage : Page, INotifyPropertyChanged
     {
-        public int SelectedWeek { get; set; }
+        private int _selectedWeek;
+
+        public int SelectedWeek
+        {
+            get => _selectedWeek;
+            set
+            {
+                if (value == _selectedWeek)
+                {
+                    return;
+                }
+                _selectedWeek = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedWeek)));
+            }
+        }
 
         private static string[] weekDic = { "周一", "周二", "周三", "周四", "周五", "周六", "周日" };
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public CoursePage()
         {
@@ -48,6 +65,8 @@ namespace OhMyWhut.Win.Pages
         }
 
         public MainViewModel ViewModel => App.ViewModel;
+
+        public AppPreference Preference => App.Preference;
 
         private void UpdateCourses(int weekOrder)
         {

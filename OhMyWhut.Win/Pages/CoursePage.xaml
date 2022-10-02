@@ -1,6 +1,7 @@
 ﻿<Page x:Class="OhMyWhut.Win.Pages.CoursePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="using:System"
       xmlns:local="using:OhMyWhut.Win.Pages"
       xmlns:data="using:OhMyWhut.Win.Data"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,18 +14,25 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Slider x:Name="WeekSelectSlider"
-                AutomationProperties.Name="Slider with ticks"
-                Margin="16,4"
-                Value="{x:Bind SelectedWeek}"
-                Minimum="1"
-                Maximum="20"
-                TickFrequency="1"
-                TickPlacement="Outside" />
+        <StackPanel Orientation="Vertical">
+            <Slider x:Name="WeekSelectSlider"
+                    Visibility="{x:Bind Preference.IsShowSelectedWeekSlider}"
+                    AutomationProperties.Name="Slider with ticks"
+                    Margin="16,4"
+                    Value="{x:Bind SelectedWeek,Mode=TwoWay}"
+                    Minimum="1"
+                    Maximum="20"
+                    TickFrequency="1"
+                    TickPlacement="Outside" />
+            <TextBlock x:Name="WeekIndicateText"
+                        HorizontalAlignment="Center"
+                        FontSize="{StaticResource TitleTextBlockFontSize}"
+                        Text="{x:Bind sys:String.Format('第 {0} 周',SelectedWeek),Mode=OneWay}" />
+        </StackPanel>
         <Grid x:Name="CourseGrid"
               Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
+                <RowDefinition Height="40" />
                 <RowDefinition Height="2*" />
                 <RowDefinition Height="3*" />
                 <RowDefinition Height="3*" />
