@@ -17,6 +17,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\CourseBox.xaml" />
+    <None Remove="Controls\EditCourseDialogContent.xaml" />
     <None Remove="Pages\BookPage.xaml" />
     <None Remove="Pages\ConfigPage.xaml" />
     <None Remove="Pages\CoursePage.xaml" />
@@ -100,6 +101,11 @@
     <Content Update="Assets\app.db">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\EditCourseDialogContent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\ElectricFeePage.xaml">

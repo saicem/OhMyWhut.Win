@@ -24,14 +24,6 @@ namespace OhMyWhut.Win.Services
             set => Save(ref _termStartDateTime, value);
         }
 
-        private bool _isShowStartDay = false;
-
-        public bool IsShowSelectedWeekSlider
-        {
-            get => _isShowStartDay;
-            set => Save(ref _isShowStartDay, value);
-        }
-
         private string _username = string.Empty;
 
         public string UserName

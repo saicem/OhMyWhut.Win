@@ -14,22 +14,12 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Vertical">
-            <Slider x:Name="WeekSelectSlider"
-                    Visibility="{x:Bind Preference.IsShowSelectedWeekSlider}"
-                    AutomationProperties.Name="Slider with ticks"
-                    Margin="16,4"
-                    Value="{x:Bind SelectedWeek,Mode=TwoWay}"
-                    Minimum="1"
-                    Maximum="20"
-                    TickFrequency="1"
-                    TickPlacement="Outside" />
-            <TextBlock x:Name="WeekIndicateText"
-                        HorizontalAlignment="Center"
-                        FontSize="{StaticResource TitleTextBlockFontSize}"
-                        Text="{x:Bind sys:String.Format('第 {0} 周',SelectedWeek),Mode=OneWay}" />
-        </StackPanel>
+        <TextBlock x:Name="WeekIndicateText"
+                   HorizontalAlignment="Center"
+                   FontSize="{StaticResource TitleTextBlockFontSize}"
+                   Text="{x:Bind sys:String.Format('第 {0} 周',SelectedWeek),Mode=OneWay}" />
         <Grid x:Name="CourseGrid"
+              Background="Transparent"
               Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
@@ -48,6 +38,13 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <Grid.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="添加课程"
+                                    Icon="Add"
+                                    Click="MenuFlyoutItem_Click"/>
+                </MenuFlyout>
+            </Grid.ContextFlyout>
         </Grid>
     </Grid>
 </Page>

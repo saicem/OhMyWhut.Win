@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -12,6 +13,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using OhMyWhut.Win.Controls;
+using OhMyWhut.Win.Data;
 using OhMyWhut.Win.Services;
 using OhMyWhut.Win.ViewModels;
 using Windows.ApplicationModel.Activation;
@@ -53,6 +55,7 @@ namespace OhMyWhut.Win.Pages
         {
             InitializeComponent();
             Loaded += CoursePage_Loaded;
+            ViewModel.CourseViewModel.CourseList.CollectionChanged += (sender, e) => UpdateCourses(SelectedWeek);
         }
 
         private void CoursePage_Loaded(object sender, RoutedEventArgs e)
@@ -60,7 +63,6 @@ namespace OhMyWhut.Win.Pages
             var today = DateOnly.FromDateTime(DateTime.Now);
             SelectedWeek = (today.DayNumber - App.Preference.TermStartDay.DayNumber) / 7 + 1;
             SelectedWeek = SelectedWeek < 1 ? 1 : SelectedWeek > 20 ? 20 : SelectedWeek;
-            WeekSelectSlider.Value = SelectedWeek;
             UpdateCourses(SelectedWeek);
         }
 
@@ -109,20 +111,44 @@ namespace OhMyWhut.Win.Pages
 
         public void Slider_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            // fix 只在组件上才会触发，无组件时不会触发
             var delta = e.GetCurrentPoint((UIElement)sender).Properties.MouseWheelDelta;
             if (delta < 0 && SelectedWeek < 20)
             {
                 SelectedWeek += 1;
-                WeekSelectSlider.Value = SelectedWeek;
                 UpdateCourses(SelectedWeek);
             }
             else if (delta > 0 && SelectedWeek > 1)
             {
                 SelectedWeek -= 1;
-                WeekSelectSlider.Value = SelectedWeek;
                 UpdateCourses(SelectedWeek);
             }
+        }
+        private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            ContentDialog dialog = new ContentDialog();
+
+            dialog.XamlRoot = this.XamlRoot;
+            dialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
+            dialog.Title = "添加课程";
+            dialog.PrimaryButtonText = "确定";
+            dialog.CloseButtonText = "取消";
+            dialog.Content = new EditCourseDialogContent();
+            dialog.DefaultButton = ContentDialogButton.Primary;
+            dialog.PrimaryButtonClick += Dialog_PrimaryButtonClick;
+
+            var result = await dialog.ShowAsync();
+        }
+
+        private async void Dialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            var course = (sender.Content as EditCourseDialogContent).GetEditedCourse();
+            var errors = course.Verify();
+            if (errors.Length > 0)
+            {
+                // todo 通知错误
+                return;
+            }
+            await App.ViewModel.CourseViewModel.AddCourse(course);
         }
     }
 }

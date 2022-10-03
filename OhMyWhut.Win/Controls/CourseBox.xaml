@@ -15,9 +15,21 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock Text="{x:Bind Course.Name}" />
+            <TextBlock Text="{x:Bind Course.Name}"
+                       TextWrapping="WrapWholeWords" />
             <TextBlock Text="{x:Bind Course.Position}"
+                       TextWrapping="WrapWholeWords"
                        Grid.Row="2" />
+            <Grid.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="修改课程"
+                                    Icon="Edit"
+                                    Click="EditMenuFlyoutItem_Click" />
+                    <MenuFlyoutItem Text="删除课程"
+                                    Icon="Delete"
+                                    Click="DeleteMenuFlyoutItem_Click" />
+                </MenuFlyout>
+            </Grid.ContextFlyout>
         </Grid>
     </Border>
 </UserControl>
