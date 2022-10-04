@@ -55,7 +55,8 @@ namespace OhMyWhut.Win.Pages
         {
             InitializeComponent();
             Loaded += CoursePage_Loaded;
-            ViewModel.CourseViewModel.CourseList.CollectionChanged += (sender, e) => UpdateCourses(SelectedWeek);
+            ViewModel.CourseViewModel.CourseList.CollectionChanged +=
+                (sender, e) => DispatcherQueue.TryEnqueue(() => UpdateCourses(SelectedWeek));
         }
 
         private void CoursePage_Loaded(object sender, RoutedEventArgs e)
@@ -148,7 +149,7 @@ namespace OhMyWhut.Win.Pages
                 // todo 通知错误
                 return;
             }
-            await App.ViewModel.CourseViewModel.AddCourse(course);
+            await App.ViewModel.CourseViewModel.AddCourseAsync(course);
         }
     }
 }

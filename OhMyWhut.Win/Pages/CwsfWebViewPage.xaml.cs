@@ -68,6 +68,7 @@ namespace OhMyWhut.Win.Pages
                 preference.Dormitory = doc.RootElement.GetProperty("dormitory").GetString();
                 preference.MeterId = doc.RootElement.GetProperty("meterId").GetString();
                 // todo 显示弹窗 让用户确认 + 尝试一次请求来验证获取的信息是否正确
+                await App.ViewModel.ElectricFeeViewModel.UpdateElectricFeeAsync();
             }
         }
 

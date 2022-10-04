@@ -14,9 +14,9 @@ namespace OhMyWhut.Win.ViewModels
         public ObservableCollection<Log> LogCollection { get; } 
             = new ObservableCollection<Log>();
 
-        public ConfigViewModel() => Task.Run(Initialize);
+        public ConfigViewModel() => Task.Run(RefreshLogs);
 
-        private void Initialize()
+        public void RefreshLogs()
         {
             using (var scope = App.Current.Services.CreateScope())
             {

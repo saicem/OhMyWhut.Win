@@ -44,7 +44,7 @@ namespace OhMyWhut.Win.Controls
                 // todo 通知错误
                 return;
             }
-            await App.ViewModel.CourseViewModel.AddCourse(course);
+            await App.ViewModel.CourseViewModel.AddCourseAsync(course);
         }
 
         private async void DeleteMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
@@ -54,7 +54,7 @@ namespace OhMyWhut.Win.Controls
                 var db = scope.ServiceProvider.GetService<AppDbContext>();
                 db.MyCourses.Remove(Course);
                 await db.SaveChangesAsync();
-                await App.ViewModel.CourseViewModel.FreshCoursesAsync();
+                App.ViewModel.CourseViewModel.LoadCoursesFromDb();
             }
         }
     }

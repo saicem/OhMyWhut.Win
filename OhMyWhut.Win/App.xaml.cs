@@ -74,7 +74,6 @@ namespace OhMyWhut.Win
             services.AddSingleton<Gluttony>();
             services.AddDbContext<AppDbContext>(builder => builder.UseSqlite());
             services.AddScoped<Logger>();
-            services.AddScoped<DataFetcher>();
 
             return services.BuildServiceProvider();
         }

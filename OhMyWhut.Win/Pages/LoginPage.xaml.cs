@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using OhMyWhut.Win.Data;
@@ -30,14 +31,14 @@ namespace OhMyWhut.Win.Pages
             (App.Preference.UserName, App.Preference.Password) = GetBoxInfo();
             using (var scope = App.Current.Services.CreateScope())
             {
-                var dataFetcher = scope.ServiceProvider.GetService<DataFetcher>();
-                var ok = await dataFetcher.UpdateCoursesAsync();
-                if (ok)
+                try
                 {
+                    await App.ViewModel.CourseViewModel.UpdateCoursesAsync();
                     App.MainWindow.Navigator.NavigateTo(typeof(HomePage));
                 }
-                else
+                catch (Exception)
                 {
+
                     FailedTip.Visibility = Visibility.Visible;
                 }
             }
