@@ -7,6 +7,26 @@
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <Grid Padding="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="欢迎"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="{StaticResource TitleTextBlockFontSize}" />
+            <TextBlock Text="{x:Bind Preference.UserName}"
+                       HorizontalAlignment="Center"
+                       Visibility="{x:Bind Preference.IsSetUserInfo}" />
+        </StackPanel>
+        <StackPanel Orientation="Vertical"
+                    Grid.Column="1">
+            <Button x:Name="BindRoomButton"
+                    Content="绑定宿舍信息"
+                    Visibility="{x:Bind IsShowSetRoomButton}"
+                    Click="BindRoomButton_Click" />
+        </StackPanel>
     </Grid>
 </Page>

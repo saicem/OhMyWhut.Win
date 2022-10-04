@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using OhMyWhut.Win.Data;
 using OhMyWhut.Win.Services;
+using OhMyWhut.Win.ViewModels;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -17,6 +18,17 @@ namespace OhMyWhut.Win.Pages
         public HomePage()
         {
             InitializeComponent();
+        }
+
+        public bool IsShowSetRoomButton { get => !Preference.IsSetMeterInfo; }
+
+        public AppPreference Preference { get => App.Preference; }
+
+        public MainViewModel ViewModel { get => App.ViewModel; }
+
+        private void BindRoomButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            App.MainWindow.Navigator.NavigateTo(typeof(CwsfWebViewPage));
         }
     }
 }
